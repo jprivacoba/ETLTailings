@@ -22,7 +22,6 @@ def UploadPerfil(path,proyecto,connStr):
     conn = ogr.Open(connStr)
     #sql = 'ALTER TABLE %s DROP COLUMN "wkb_geometry","ogc_fid";' %(table)
     #conn.ExecuteSQL(sql)
-
 #   Fin de la funcion
 
 
