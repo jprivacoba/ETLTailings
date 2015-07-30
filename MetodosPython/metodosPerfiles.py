@@ -19,7 +19,7 @@ def UploadPerfil(path,proyecto,connStr):
             CargaArchivoPerfil(connStr,tablename,dataPerfil)
             files.append(nombreFichero+extension)
     # TODO: Inserta nuevo registro en la tabla proyectos_perfiles o actualizar si ya existe
-    conn = ogr.Open(connStr)
+    %conn = ogr.Open(connStr)
     #sql = 'ALTER TABLE %s DROP COLUMN "wkb_geometry","ogc_fid";' %(table)
     #conn.ExecuteSQL(sql)
 #   Fin de la funcion
