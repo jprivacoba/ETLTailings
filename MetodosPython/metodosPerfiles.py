@@ -23,7 +23,7 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
     estado = "'"+str(reprocesa)+"'"
     sql = 'select  perfiles_procesados.guarda_proyecto(%s,%s)' %(fechap,estado)
-    print sql
+    #print sql
     EsError = conn.ExecuteSQL(sql)
     for feature in EsError:
         print "El codigo de error es " + str(feature.GetField("guarda_proyecto"))

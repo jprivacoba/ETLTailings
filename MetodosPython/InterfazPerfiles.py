@@ -40,6 +40,7 @@ def salir():
 def test():
     print checkvar.get()
 
+
 # Inicializar Interfaz Grafica para carga masiva
 w1 = Tk()
 
