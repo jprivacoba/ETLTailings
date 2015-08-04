@@ -59,10 +59,9 @@ b3 = Button(w1, text='Seleccionar carpeta',command=rutaDir).grid(row=3,column=3)
 # 4ta fila en blanco
 checkvar = IntVar()
 c4 = Checkbutton(w1, text="Reprocesar", variable=checkvar).grid(row=4,column=2)
-#aux2 = Label(w1, text='').grid(row=4,column=2)
 
 # 5ta fila
-b5 = Button(w1, text='Cargar archivos',command=test).grid(row=5,column=2)
+b5 = Button(w1, text='Cargar archivos',command=subeArchivos).grid(row=5,column=2)
 exitB = Button(w1, text='Salir', command=salir).grid(row=5,column=3)
 
 w1.mainloop()
