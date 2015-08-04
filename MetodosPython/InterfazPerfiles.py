@@ -33,6 +33,8 @@ def rutaDir():
     rutaP.set(rutadeldirectorio)
 #   Fin funcion
 
+def salir():
+    os._exit(0)
 
 # Inicializar Interfaz Grafica para carga masiva
 w1 = Tk()
@@ -47,6 +49,7 @@ aux = Label(w1, text='').grid(row=2,column=2)
 l3 = Label(w1, text='Ruta:')
 l3.grid(row=3,column=1)
 rutaP = StringVar()
+rutaP.set("C:\Users\Arnol\Desktop\TestPerfiles") #TODO: Solo para testing
 e3 = Entry(w1, textvariable=rutaP).grid(row=3,column=2) # Extrae ruta
 b3 = Button(w1, text='Seleccionar carpeta',command=rutaDir).grid(row=3,column=3)
 
@@ -55,6 +58,6 @@ aux2 = Label(w1, text='').grid(row=4,column=2)
 
 # 5ta fila
 b5 = Button(w1, text='Cargar archivos',command=subeArchivos).grid(row=5,column=2)
-exitB = Button(w1, text='Salir', command=exit).grid(row=5,column=3)
+exitB = Button(w1, text='Salir', command=salir).grid(row=5,column=3)
 
 w1.mainloop()
