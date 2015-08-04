@@ -21,20 +21,10 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     # Actualiza tabla proyectos_perfiles
     conn = ogr.Open(connStr)
     fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
-    estado = str(reprocesa)
+    estado = "'"+str(reprocesa)+"'"
     sql = 'select  perfiles_procesados.guarda_proyecto(%s,%s)' %(fechap,estado)
-
+    print sql
     EsError = conn.ExecuteSQL(sql)
-    #layerDefinition = EsError.GetLayerDefn()
-    #print "Name  -  Type  Width  Precision"
-    #for i in range(layerDefinition.GetFieldCount()):
-    #    fieldName =  layerDefinition.GetFieldDefn(i).GetName()
-    #    fieldTypeCode = layerDefinition.GetFieldDefn(i).GetType()
-    #    fieldType = layerDefinition.GetFieldDefn(i).GetFieldTypeName(fieldTypeCode)
-    #    fieldWidth = layerDefinition.GetFieldDefn(i).GetWidth()
-    #    GetPrecision = layerDefinition.GetFieldDefn(i).GetPrecision()
-    #print fieldName + " - " + fieldType+ " " + str(fieldWidth) + " " + str(GetPrecision)
-
     for feature in EsError:
         print "El codigo de error es " + str(feature.GetField("guarda_proyecto"))
 #   Fin de la funcion
@@ -77,8 +67,8 @@ def DatosPerfil(filename):
     line=file.readline()
     while (line != "" and line!="\n"): # Termina si llega al final del archivo o si hay una linea en blanco
         Line=line.split("\t")
-        x=float(Line[0])
-        y=float(Line[1])
+        x=float(Line[0].replace(",","."))
+        y=float(Line[1].replace(",","."))
         datos.append([x,y])
         line=file.readline()
     file.close()

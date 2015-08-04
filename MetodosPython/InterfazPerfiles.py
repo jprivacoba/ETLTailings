@@ -18,7 +18,8 @@ connString = "PG: host=%s dbname=%s user=%s password=%s" %(dbServer,dbName,dbUse
 def subeArchivos():
     path = str(rutaP.get())
     connStr = connString
-    metPer.LoadPerfilMulti(path,connStr,checkvar.get())
+    rep = str(checkvar.get())
+    metPer.LoadPerfilMulti(path,connStr,rep)
 # Fin funcion
 
 def formatoRuta(rutaAux):
