@@ -4,7 +4,7 @@
 import os
 from osgeo import ogr,osr
 
-def LoadPerfilSingle(path,proyecto,connStr):
+def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     files = []
     #Lista con todos los archivos del directorio:
     ficheros = os.listdir(path)
@@ -21,15 +21,22 @@ def LoadPerfilSingle(path,proyecto,connStr):
     # Actualiza tabla proyectos_perfiles
     conn = ogr.Open(connStr)
     fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
-    estado = "'PENDI'"
-    sql = 'INSERT INTO  ' \
-          '"perfiles_procesados"."proyecto_perfiles" (fechaproyecto, fechacreacion, codestado, fechaestado' \
-          ')' \
-          'VALUES' \
-          '(' \
-          '%s, now(), %s, now()' \
-          ');' %(fechap,estado)
-    conn.ExecuteSQL(sql)
+    estado = str(reprocesa)
+    sql = 'select  perfiles_procesados.guarda_proyecto(%s,%s)' %(fechap,estado)
+
+    EsError = conn.ExecuteSQL(sql)
+    #layerDefinition = EsError.GetLayerDefn()
+    #print "Name  -  Type  Width  Precision"
+    #for i in range(layerDefinition.GetFieldCount()):
+    #    fieldName =  layerDefinition.GetFieldDefn(i).GetName()
+    #    fieldTypeCode = layerDefinition.GetFieldDefn(i).GetType()
+    #    fieldType = layerDefinition.GetFieldDefn(i).GetFieldTypeName(fieldTypeCode)
+    #    fieldWidth = layerDefinition.GetFieldDefn(i).GetWidth()
+    #    GetPrecision = layerDefinition.GetFieldDefn(i).GetPrecision()
+    #print fieldName + " - " + fieldType+ " " + str(fieldWidth) + " " + str(GetPrecision)
+
+    for feature in EsError:
+        print "El codigo de error es " + str(feature.GetField("guarda_proyecto"))
 #   Fin de la funcion
 
 
@@ -40,7 +47,7 @@ def CargaArchivoPerfil(connStr,table,datos):
     srs = osr.SpatialReference()
     srs.ImportFromEPSG(4326) # Este campo no se usa asi que se deja este no mas
     # Crear la tabla con los campos
-    print table
+    #print table
     layer = conn.CreateLayer(table, srs, ogr.wkbPoint, ['OVERWRITE=YES'] )
     layer.CreateField(ogr.FieldDefn("distancia", ogr.OFTReal))
     layer.CreateField(ogr.FieldDefn("profundidad", ogr.OFTReal))
@@ -79,11 +86,10 @@ def DatosPerfil(filename):
 #   Fin de la funcion
 
 
-def LoadPerfilMulti(path,connStr):
+def LoadPerfilMulti(path,connStr,reprocesa):
     proyectos = os.listdir(path)
     for i in range(len(proyectos)):
         p=proyectos[i].replace(".","_")
         newpath = path+ "/" + proyectos[i] + "/"
-        print i,proyectos[i],p,newpath
-        LoadPerfilSingle(newpath,p,connStr)
+        LoadPerfilSingle(newpath,p,connStr,reprocesa)
 #   Fin de la funcion
