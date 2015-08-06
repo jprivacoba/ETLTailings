@@ -5,19 +5,26 @@ from osgeo import ogr,osr
 from Tkinter import *
 from tkFileDialog import *
 import metodosPerfiles as metPer
+import sys
 
 
-dbServer = "152.231.85.226"
-dbName = "Testing_ETL"
-dbUser = "postgres"
-dbPW = "admin"
-connString = "PG: host=%s dbname=%s user=%s password=%s" %(dbServer,dbName,dbUser,dbPW)
+#dbServer0 = "152.231.85.226"
+#dbName0 = "Testing_ETL"
+#dbUser0 = "postgres"
+#dbPW0 = "admin"
+#connString0 = "PG: host=%s dbname=%s user=%s password=%s" %(dbServer0,dbName0,dbUser0,dbPW0)
+GlobalValues = {}
+GlobalValues['host'] = ""
+GlobalValues['dbname'] = ""
+GlobalValues['user'] = ""
+GlobalValues['password'] = ""
+GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %("","","","")
 
 
 # Interfaz grafica
 def subeArchivos():
     path = str(rutaP.get())
-    connStr = connString
+    connStr = GlobalValues['connString']
     rep = str(checkvar.get())
     metPer.LoadPerfilMulti(path,connStr,rep)
 # Fin funcion
@@ -36,20 +43,93 @@ def rutaDir():
 
 def salir():
     os._exit(0)
+#   Fin funcion
 
-def test():
-    print checkvar.get()
+def testConn(dbServer,dbName,dbUser,dbPW):
+    connString = 'PG: host=%s dbname=%s user=%s password=%s' %(dbServer,dbName,dbUser,dbPW)
+    testConnString(connString)
+    # Fin funcion
+
+def testConnString(connStr,esTest=1):
+    ogr.UseExceptions()
+    texto =""
+    esError = 0
+    try:
+        conn = ogr.Open(connStr)
+        texto = "Conexion exitosa"
+        conn.Destroy()
+    except Exception:
+        texto= "Error de conexion"
+        esError = 1
+    if esTest==1:
+        EdoConexion(texto)
+    if esTest==0 and esError==1: #TODO: ver si esto funciona o hacer un try/except al llamar a subeArchivo()
+        EdoConexion(texto)
+        sys.exit(1)
+
+def paramConeccion():
+    # Ventana de coneccion a BD
+    w2 = Toplevel()
+    dbServer = StringVar()
+    dbServer.set(GlobalValues['host'])
+    Lserver = Label(w2, text='DB Server').grid(row=1,column=1)
+    Eserver = Entry(w2, textvariable=dbServer).grid(row=1,column=2)
+    dbName = StringVar()
+    dbName.set(GlobalValues['dbname'])
+    Lname = Label(w2, text='DB Name').grid(row=2,column=1)
+    Ename = Entry(w2, textvariable=dbName).grid(row=2,column=2)
+    dbUser = StringVar()
+    dbUser.set(GlobalValues['user'])
+    Luser = Label(w2, text='User').grid(row=3,column=1)
+    Euser = Entry(w2, textvariable=dbUser).grid(row=3,column=2)
+    dbPW = StringVar()
+    dbPW.set(GlobalValues['password'])
+    Lpass = Label(w2, text='Password').grid(row=4,column=1)
+    Epass = Entry(w2, textvariable=dbPW).grid(row=4,column=2)
+    bOK = Button(w2, text='Aceptar',command=lambda: aceptaConn(w2,
+                                                            dbServer.get(),
+                                                            dbName.get(),
+                                                            dbUser.get(),
+                                                            dbPW.get())).grid(row=5,column=2)
+    bTest = Button(w2, text='Test',command=lambda: testConn(dbServer.get(),
+                                                            dbName.get(),
+                                                            dbUser.get(),
+                                                            dbPW.get())).grid(row=5,column=3)
+
+def aceptaConn(window,Server,Name,User,PW):
+    GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %(Server,Name,User,PW)
+    GlobalValues['host'] = Server
+    GlobalValues['dbname'] = Name
+    GlobalValues['user'] = User
+    GlobalValues['password'] = PW
+    window.destroy()
+
+def EdoConexion(estado):
+    w3=Toplevel()
+    w3lab12 = Label(w3, text="").grid(row=1,column=2)
+    w3lab21 = Label(w3, text="  ").grid(row=2,column=1)
+    w3lab22 = Label(w3, text=estado).grid(row=2,column=2)
+    w3lab23 = Label(w3, text="  ").grid(row=2,column=1)
+    w3lab32 = Label(w3, text="").grid(row=3,column=2)
+    w3bOK = Button(w3, text='Aceptar',command=w3.destroy).grid(row=4,column=2)
+    w3lab52 = Label(w3, text="").grid(row=5,column=2)
+
+def testing():
+    print str(GlobalValues['connString'])
+#   Fin funcion
+
+
 
 
 # Inicializar Interfaz Grafica para carga masiva
-w1 = Tk()
 
+# Ventana principal
+w1 = Tk()
 # Titulo de la ventana
 l = Label(w1, text='Cargador masivo de archivos de perfiles')
 l.grid(row=1,column=2)
-# Espacio en blanco
-aux = Label(w1, text='').grid(row=2,column=2)
-
+# 2da fila
+b2 = Button(w1, text='Detalles conexion',command=paramConeccion).grid(row=2,column=3)
 # 3era fila
 l3 = Label(w1, text='Ruta:')
 l3.grid(row=3,column=1)
@@ -57,13 +137,12 @@ rutaP = StringVar()
 rutaP.set("C:\Users\Arnol\Desktop\TestPerfiles") #TODO: Solo para testing
 e3 = Entry(w1, textvariable=rutaP).grid(row=3,column=2) # Extrae ruta
 b3 = Button(w1, text='Seleccionar carpeta',command=rutaDir).grid(row=3,column=3)
-
 # 4ta fila en blanco
 checkvar = IntVar()
 c4 = Checkbutton(w1, text="Reprocesar", variable=checkvar).grid(row=4,column=2)
 
 # 5ta fila
-b5 = Button(w1, text='Cargar archivos',command=subeArchivos).grid(row=5,column=2)
+b5 = Button(w1, text='Cargar archivos',command=testing).grid(row=5,column=2)
 exitB = Button(w1, text='Salir', command=salir).grid(row=5,column=3)
-
 w1.mainloop()
+
