@@ -5,32 +5,36 @@ import os
 from osgeo import ogr,osr
 
 def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
+    fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
+    estado = "'"+str(reprocesa)+"'"
+    conn = ogr.Open(connStr)
+    sql1 = 'select  perfiles_procesados.crea_proyecto(%s)' %(fechap)
+    numPresults = conn.ExecuteSQL(sql1)
+    for feature in numPresults:
+        numP = str(feature.GetField("crea_proyecto"))
+        print "numP es: "+numP #TODO: eliminar despues de testear
     files = []
     #Lista con todos los archivos del directorio:
     ficheros = os.listdir(path)
-    #Crea una lista de los ficheros jpg que existen en el directorio y los incluye a la lista.
     for fichero in ficheros:
         (nombreFichero, extension) = os.path.splitext(fichero)
         if(extension == ".txt"):
-            perfil=nombreFichero.split(" ")
+            perfil=nombreFichero.replace(" ","")
             print perfil
             dataPerfil=DatosPerfil(path+fichero)
-            tablename=nombreFichero + " " + proyecto
+            tablename=str(numP) + " " + perfil + " " + proyecto
             CargaArchivoPerfil(connStr,tablename,dataPerfil)
             files.append(nombreFichero+extension)
     # Actualiza tabla proyectos_perfiles
-    conn = ogr.Open(connStr)
-    fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
-    estado = "'"+str(reprocesa)+"'"
-    sql = 'select  perfiles_procesados.guarda_proyecto(%s,%s)' %(fechap,estado)
-    #print sql
-    EsError = conn.ExecuteSQL(sql)
+    sql2 = 'select  perfiles_procesados.guarda_proyecto(%s,%s)' %(numP,estado)
+    EsError = conn.ExecuteSQL(sql2)
     for feature in EsError:
         print "El codigo de error es " + str(feature.GetField("guarda_proyecto"))
+    conn.Destroy()
 #   Fin de la funcion
 
 
-def CargaArchivoPerfil(connStr,table,datos):
+def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no abrir/cerrar a cada crato
     # Abrir la coneccion
     conn = ogr.Open(connStr)
     # create the spatial reference, WGS84
@@ -75,11 +79,23 @@ def DatosPerfil(filename):
     return datos
 #   Fin de la funcion
 
-
 def LoadPerfilMulti(path,connStr,reprocesa):
     proyectos = os.listdir(path)
     for i in range(len(proyectos)):
-        p=proyectos[i].replace(".","_")
+        proy=proyectos[i].replace(".","_")
         newpath = path+ "/" + proyectos[i] + "/"
-        LoadPerfilSingle(newpath,p,connStr,reprocesa)
+        LoadPerfilSingle(newpath,proy,connStr,reprocesa)
 #   Fin de la funcion
+
+def FormatoProyecto(StrAux):
+    newStr = "00_00_0000"
+    try:
+        dia = StrAux[0:2]
+        mes = StrAux[3:5]
+        anno = StrAux[6:]
+        if len(anno)==2:
+            anno = "20"+anno
+        newStr = dia + "_" + mes + "_" + anno
+    except Exception:
+        print "Error en el formato del nombre de proyecto: Nombre "+ StrAux+" no valido, debe ser en formato dd_mm_aaaa o dd.mm.aaaa"
+    return newStr
