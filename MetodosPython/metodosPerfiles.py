@@ -4,33 +4,51 @@
 import os
 from osgeo import ogr,osr
 
-def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
+
+def LoadPerfilMulti(path,connStr,reprocesa,logwin):
+    proyectos = os.listdir(path)
+    for i in range(len(proyectos)):
+        proy=proyectos[i].replace(".","_")
+        newpath = path+ "/" + proyectos[i] + "/"
+        LoadPerfilSingle(newpath,proy,connStr,reprocesa,logwin)
+#   Fin de la funcion
+
+def LoadPerfilSingle(path,proyecto,connStr,reprocesa,logwin):
     fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
     estado = "'"+str(reprocesa)+"'"
     conn = ogr.Open(connStr)
     sql1 = 'select  perfiles_procesados.crea_proyecto(%s)' %(fechap)
-    numPresults = conn.ExecuteSQL(sql1)
-    for feature in numPresults:
-        numP = str(feature.GetField("crea_proyecto"))
-        print "numP es: "+numP #TODO: eliminar despues de testear
-    files = []
-    #Lista con todos los archivos del directorio:
-    ficheros = os.listdir(path)
-    for fichero in ficheros:
-        (nombreFichero, extension) = os.path.splitext(fichero)
-        if(extension == ".txt"):
-            perfil=nombreFichero.replace(" ","")
-            print perfil
-            dataPerfil=DatosPerfil(path+fichero)
-            tablename=str(numP) + " " + perfil + " " + proyecto
-            CargaArchivoPerfil(connStr,tablename,dataPerfil)
-            files.append(nombreFichero+extension)
-    # Actualiza tabla proyectos_perfiles
-    sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,%s)' %(int(numP),estado)
-    EsError = conn.ExecuteSQL(sql2)
-    print sql2,EsError
-    for feature in EsError:
-        print "El codigo de error es " + str(feature.GetField("guarda_proyecto"))
+    try:
+        numPresults = conn.ExecuteSQL(sql1)
+        for feature in numPresults:
+            numP = str(feature.GetField("crea_proyecto"))
+        files = []
+        #Lista con todos los archivos del directorio:
+        ficheros = os.listdir(path)
+        print "Cargando proyecto " + proyecto
+        logwin.update()
+        for fichero in ficheros:
+            (nombreFichero, extension) = os.path.splitext(fichero)
+            if(extension == ".txt"):
+                perfil=nombreFichero.replace(" ","")
+                print 'Cargando archivo "'+str(fichero)+'"'
+                dataPerfil=DatosPerfil(path+fichero)
+                tablename=str(numP) + " " + perfil + " " + proyecto
+                CargaArchivoPerfil(connStr,tablename,dataPerfil)
+                files.append(nombreFichero+extension)
+            logwin.update()
+        # Actualiza tabla proyectos_perfiles
+        sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,%s)' %(int(numP),estado)
+        EsError = conn.ExecuteSQL(sql2)
+        for feature in EsError:
+            codeError = feature.GetField("guarda_proyecto")
+            if codeError==0:
+                print "Proyecto %s procesado exitosamente\n"%(proyecto)
+            else:
+                print "Proyecto %s procesado con errores\n"%(proyecto)
+    except Exception,e:
+        print "ERROR al crear proyecto " + proyecto + " :" + str(e)
+        logwin.update()
     conn.Destroy()
 #   Fin de la funcion
 
@@ -78,14 +96,6 @@ def DatosPerfil(filename):
         line=file.readline()
     file.close()
     return datos
-#   Fin de la funcion
-
-def LoadPerfilMulti(path,connStr,reprocesa):
-    proyectos = os.listdir(path)
-    for i in range(len(proyectos)):
-        proy=proyectos[i].replace(".","_")
-        newpath = path+ "/" + proyectos[i] + "/"
-        LoadPerfilSingle(newpath,proy,connStr,reprocesa)
 #   Fin de la funcion
 
 def FormatoProyecto(StrAux):

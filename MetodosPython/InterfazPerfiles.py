@@ -6,14 +6,12 @@ from Tkinter import *
 from tkFileDialog import *
 import metodosPerfiles as metPer
 import sys
+import time
+import datetime as dt
 
 
-#dbServer0 = "152.231.85.226"
-#dbName0 = "Testing_ETL"
-#dbUser0 = "postgres"
-#dbPW0 = "admin"
-#connString0 = "PG: host=%s dbname=%s user=%s password=%s" %(dbServer0,dbName0,dbUser0,dbPW0)
 #TODO: dejar los parametros de conexion en un archivo config.txt
+#TODO: borrar valores iniciales de configuarcion
 GlobalValues = {}
 GlobalValues['host'] = "" + "152.231.85.226"
 GlobalValues['dbname'] = "" + "Testing_ETL"
@@ -30,8 +28,23 @@ def subeArchivos():
     path = str(rutaP.get())
     connStr = GlobalValues['connString']
     rep = str(checkvar.get())
-    #testConnString(connStr,esTest=0) #TODO: agregar manejo de excepciones aca
-    metPer.LoadPerfilMulti(path,connStr,rep)
+    err = testConnString(connStr,esTest=0)
+    print err
+    if err==0:
+        logwin = LogWindow()
+        stdout_old = sys.stdout
+        sys.stdout = Std_redirector(logwin)
+        time_ini = dt.datetime.now()
+        print "Carga de archivos iniciada: " + time_ini.strftime("%d-%m-%Y %H:%M:%S")
+        logwin.update()
+        try:
+            metPer.LoadPerfilMulti(path,connStr,rep,logwin)
+            time_fin = dt.datetime.now()
+            print "Carga de archivos finalizada: " + time_fin.strftime("%d-%m-%Y %H:%M:%S")
+            print "Tiempo de ejecucion: " + str(time_fin-time_ini)
+        except Exception,e:
+            print "Error de ejecucion:\n" + str(e)
+        sys.stdout = stdout_old
 # Fin funcion
 
 def formatoRuta(rutaAux):
@@ -70,7 +83,7 @@ def testConnString(connStr,esTest=1):
         EdoConexion(texto)
     if esTest==0 and esError==1: #TODO: ver si esto funciona o hacer un try/except al llamar a subeArchivo()
         EdoConexion(texto)
-        sys.exit(1)
+    return esError
 
 def paramConeccion():
     # Ventana de coneccion a BD
@@ -125,17 +138,9 @@ def EdoConexion(estado):
     w3bOK = Button(w3, text='Aceptar',command=w3.destroy).grid(row=4,column=1)
     w3lab5 = Label(w3, text="").grid(row=5,column=1)
 
-def testing():
-    #print str(GlobalValues['connString'])
-    logwin = LogWindow()
-    sys.stdout.write = logwin.redirector
-    newtext = "hola mundo\n"
-    logwin.insert(END, newtext)
-    print "testing\n"
-#   Fin funcion
-
 def LogWindow():
     logg = Toplevel()
+    time.sleep(3)
     logg.title("Log")
     S = Scrollbar(logg)
     T = Text(logg, height=20, width=70)
@@ -143,22 +148,36 @@ def LogWindow():
     T.pack(side=LEFT, fill=Y)
     S.config(command=T.yview)
     T.config(yscrollcommand=S.set)
-    quote = """HAMLET: To be, or not to be--that is the question:
-    Whether 'tis nobler in the mind to suffer
-    The slings and arrows of outrageous fortune
-    Or to take arms against a sea of troubles
-    And by opposing end them. To die, to sleep--
-    No more--and by a sleep to say we end
-    The heartache, and the thousand natural shocks
-    That flesh is heir to. 'Tis a consummation
-    Devoutly to be wished."""+"\n"
-    T.insert(END, quote)
+    exitB = Button(logg,width=10,text="Salir",command=salir).pack(side=BOTTOM)
+    aceptaB = Button(logg,width=10,text="Aceptar",command=logg.destroy).pack(side=BOTTOM)
+    cancelaB = Button(logg,width=10,text="Cancelar",command=logg.destroy).pack(side=BOTTOM)
     return T
 #   Fin de la funcion
 
-def redirector(self,nputStr):
-    self.insert(INSERT, inputStr)
+class Std_redirector(object):
+    def __init__(self,widget):
+        self.widget = widget
 
+    def write(self,string):
+        self.widget.insert(END,string)
+        self.widget.see(END)
+
+def cancelaCarga(self):
+    self.destroy()
+    #print "ERROR: Carga de archivos cancelada"
+
+def testing1():
+    logwin = LogWindow()
+    stdout_old = sys.stdout
+    sys.stdout = Std_redirector(logwin)
+    newtext = "hola mundo\n"
+    #logwin.insert(END, newtext)
+    print "testing\n"
+    print "hola"
+    print"mundo"
+    sys.stdout = stdout_old
+    print "sali"
+#   Fin funcion
 
 
 
