@@ -26,8 +26,9 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
             CargaArchivoPerfil(connStr,tablename,dataPerfil)
             files.append(nombreFichero+extension)
     # Actualiza tabla proyectos_perfiles
-    sql2 = 'select  perfiles_procesados.guarda_proyecto(%s,%s)' %(numP,estado)
+    sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,%s)' %(int(numP),estado)
     EsError = conn.ExecuteSQL(sql2)
+    print sql2,EsError
     for feature in EsError:
         print "El codigo de error es " + str(feature.GetField("guarda_proyecto"))
     conn.Destroy()
