@@ -81,7 +81,7 @@ def testConnString(connStr,esTest=1):
         esError = 1
     if esTest==1:
         EdoConexion(texto)
-    if esTest==0 and esError==1: #TODO: ver si esto funciona o hacer un try/except al llamar a subeArchivo()
+    if esTest==0 and esError==1:
         EdoConexion(texto)
     return esError
 
@@ -202,7 +202,7 @@ l3 = Label(w1, width=10,text='Ruta:')
 l3.grid(row=3,column=1)
 rutaP = StringVar()
 #TODO: Setear valor de rutaP olo para testing, eliminar despues
-rutaP.set("C:\Users\Arnol\Desktop\TestPerfiles")
+#rutaP.set("C:\Users\Arnol\Desktop\TestPerfiles")
 e3 = Entry(w1, width=40,textvariable=rutaP).grid(row=3,column=2) # Extrae ruta
 b3 = Button(w1, width=15,text='Seleccionar carpeta',command=rutaDir).grid(row=3,column=4)
 l33 = Label(w1,width=1,text='').grid(row=3,column=3)
