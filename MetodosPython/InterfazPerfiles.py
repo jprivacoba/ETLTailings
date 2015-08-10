@@ -13,12 +13,16 @@ import sys
 #dbUser0 = "postgres"
 #dbPW0 = "admin"
 #connString0 = "PG: host=%s dbname=%s user=%s password=%s" %(dbServer0,dbName0,dbUser0,dbPW0)
+#TODO: dejar los parametros de conexion en un archivo config.txt
 GlobalValues = {}
-GlobalValues['host'] = ""
-GlobalValues['dbname'] = ""
-GlobalValues['user'] = ""
-GlobalValues['password'] = ""
-GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %("","","","")
+GlobalValues['host'] = "" + "152.231.85.226"
+GlobalValues['dbname'] = "" + "Testing_ETL"
+GlobalValues['user'] = "" + "postgres"
+GlobalValues['password'] = "" + "admin"
+GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %(GlobalValues['host'],
+                                                                           GlobalValues['dbname'],
+                                                                           GlobalValues['user'],
+                                                                           GlobalValues['password'])
 
 
 # Interfaz grafica
@@ -86,15 +90,19 @@ def paramConeccion():
     dbPW.set(GlobalValues['password'])
     Lpass = Label(w2, text='Password').grid(row=4,column=1)
     Epass = Entry(w2, textvariable=dbPW).grid(row=4,column=2)
+    bTest = Button(w2, text='Test',command=lambda: testConn(dbServer.get(),
+                                                            dbName.get(),
+                                                            dbUser.get(),
+                                                            dbPW.get())).grid(row=5,column=2)
+    #TODO: revisar si dejar el check o que el usuario siempre tenga que ingresar los parametros
+    #save = IntVar()
+    #Csave = Checkbutton(w2, text="Guardar parametros", variable=save).grid(row=5,column=3)
     bOK = Button(w2, text='Aceptar',command=lambda: aceptaConn(w2,
                                                             dbServer.get(),
                                                             dbName.get(),
                                                             dbUser.get(),
-                                                            dbPW.get())).grid(row=5,column=2)
-    bTest = Button(w2, text='Test',command=lambda: testConn(dbServer.get(),
-                                                            dbName.get(),
-                                                            dbUser.get(),
-                                                            dbPW.get())).grid(row=5,column=3)
+                                                            dbPW.get())).grid(row=6,column=2)
+
 
 def aceptaConn(window,Server,Name,User,PW):
     GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %(Server,Name,User,PW)
@@ -115,8 +123,40 @@ def EdoConexion(estado):
     w3lab52 = Label(w3, text="").grid(row=5,column=2)
 
 def testing():
-    print str(GlobalValues['connString'])
+    #print str(GlobalValues['connString'])
+    logwin = LogWindow()
+    sys.stdout.write = logwin.redirector
+    newtext = "hola mundo\n"
+    logwin.insert(END, newtext)
+    print "testing\n"
 #   Fin funcion
+
+def LogWindow():
+    logg = Toplevel()
+    logg.title("Log")
+    S = Scrollbar(logg)
+    T = Text(logg, height=20, width=70)
+    S.pack(side=RIGHT, fill=Y)
+    T.pack(side=LEFT, fill=Y)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    quote = """HAMLET: To be, or not to be--that is the question:
+    Whether 'tis nobler in the mind to suffer
+    The slings and arrows of outrageous fortune
+    Or to take arms against a sea of troubles
+    And by opposing end them. To die, to sleep--
+    No more--and by a sleep to say we end
+    The heartache, and the thousand natural shocks
+    That flesh is heir to. 'Tis a consummation
+    Devoutly to be wished."""+"\n"
+    T.insert(END, quote)
+    return T
+#   Fin de la funcion
+
+def redirector(self,nputStr):
+    self.insert(INSERT, inputStr)
+
+
 
 
 
@@ -125,8 +165,9 @@ def testing():
 
 # Ventana principal
 w1 = Tk()
+w1.title('Cargador masivo de archivos de perfiles')
 # Titulo de la ventana
-l = Label(w1, text='Cargador masivo de archivos de perfiles')
+l = Label(w1, text="")
 l.grid(row=1,column=2)
 # 2da fila
 b2 = Button(w1, text='Detalles conexion',command=paramConeccion).grid(row=2,column=3)
@@ -134,7 +175,8 @@ b2 = Button(w1, text='Detalles conexion',command=paramConeccion).grid(row=2,colu
 l3 = Label(w1, text='Ruta:')
 l3.grid(row=3,column=1)
 rutaP = StringVar()
-rutaP.set("C:\Users\Arnol\Desktop\TestPerfiles") #TODO: Solo para testing
+#TODO: Setear valor de rutaP olo para testing, eliminar despues
+rutaP.set("C:\Users\Arnol\Desktop\TestPerfiles")
 e3 = Entry(w1, textvariable=rutaP).grid(row=3,column=2) # Extrae ruta
 b3 = Button(w1, text='Seleccionar carpeta',command=rutaDir).grid(row=3,column=3)
 # 4ta fila en blanco
@@ -142,7 +184,7 @@ checkvar = IntVar()
 c4 = Checkbutton(w1, text="Reprocesar", variable=checkvar).grid(row=4,column=2)
 
 # 5ta fila
-b5 = Button(w1, text='Cargar archivos',command=testing).grid(row=5,column=2)
+b5 = Button(w1, text='Cargar archivos',command=subeArchivos).grid(row=5,column=2)
 exitB = Button(w1, text='Salir', command=salir).grid(row=5,column=3)
 w1.mainloop()
 
