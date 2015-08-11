@@ -35,7 +35,7 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
                 perfil=nombreFichero.replace(" ","")
                 print 'Cargando archivo "'+str(fichero)+'"'
                 dataPerfil=DatosPerfil(path+fichero)
-                tablename=str(numP) + " " + perfil + " " + proyecto
+                tablename="temp." + str(numP) + " " + perfil + " " + proyecto
                 CargaArchivoPerfil(connStr,tablename,dataPerfil)
                 files.append(nombreFichero+extension)
         # Actualiza tabla proyectos_perfiles
