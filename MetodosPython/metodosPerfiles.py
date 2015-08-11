@@ -5,15 +5,18 @@ import os
 from osgeo import ogr,osr
 
 
-def LoadPerfilMulti(path,connStr,reprocesa,logwin):
+def LoadPerfilMulti(path,connStr,reprocesa):
     proyectos = os.listdir(path)
     for i in range(len(proyectos)):
-        proy=proyectos[i].replace(".","_")
+        proy=FormatoProyecto(proyectos[i])
         newpath = path+ "/" + proyectos[i] + "/"
-        LoadPerfilSingle(newpath,proy,connStr,reprocesa,logwin)
+        try:
+            LoadPerfilSingle(newpath,proy,connStr,reprocesa)
+        except Exception,e:
+            print "ERROR al procesar el proyecto %s : %s "%(str(proyectos[i]),str(e))
 #   Fin de la funcion
 
-def LoadPerfilSingle(path,proyecto,connStr,reprocesa,logwin):
+def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
     estado = "'"+str(reprocesa)+"'"
     conn = ogr.Open(connStr)
@@ -26,7 +29,6 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa,logwin):
         #Lista con todos los archivos del directorio:
         ficheros = os.listdir(path)
         print "Cargando proyecto " + proyecto
-        logwin.update()
         for fichero in ficheros:
             (nombreFichero, extension) = os.path.splitext(fichero)
             if(extension == ".txt"):
@@ -36,7 +38,6 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa,logwin):
                 tablename=str(numP) + " " + perfil + " " + proyecto
                 CargaArchivoPerfil(connStr,tablename,dataPerfil)
                 files.append(nombreFichero+extension)
-            logwin.update()
         # Actualiza tabla proyectos_perfiles
         sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,%s)' %(int(numP),estado)
         EsError = conn.ExecuteSQL(sql2)
@@ -48,7 +49,6 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa,logwin):
                 print "Proyecto %s procesado con errores\n"%(proyecto)
     except Exception,e:
         print "ERROR al crear proyecto " + proyecto + " :" + str(e)
-        logwin.update()
     conn.Destroy()
 #   Fin de la funcion
 
@@ -60,7 +60,6 @@ def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no
     srs = osr.SpatialReference()
     srs.ImportFromEPSG(4326) # Este campo no se usa asi que se deja este no mas
     # Crear la tabla con los campos
-    #print table
     layer = conn.CreateLayer(table, srs, ogr.wkbPoint, ['OVERWRITE=YES'] )
     layer.CreateField(ogr.FieldDefn("distancia", ogr.OFTReal))
     layer.CreateField(ogr.FieldDefn("profundidad", ogr.OFTReal))
@@ -99,14 +98,14 @@ def DatosPerfil(filename):
 #   Fin de la funcion
 
 def FormatoProyecto(StrAux):
-    newStr = "00_00_0000"
-    try:
+    if len(StrAux)>7:
+        StrAux = StrAux.replace("_conv","")
         dia = StrAux[0:2]
         mes = StrAux[3:5]
         anno = StrAux[6:]
         if len(anno)==2:
             anno = "20"+anno
         newStr = dia + "_" + mes + "_" + anno
-    except Exception:
-        print "Error en el formato del nombre de proyecto: Nombre "+ StrAux+" no valido, debe ser en formato dd_mm_aaaa o dd.mm.aaaa"
+    else:
+        newStr = "00_00_0000"
     return newStr

@@ -25,26 +25,35 @@ GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %(Globa
 
 # Interfaz grafica
 def subeArchivos():
-    path = str(rutaP.get())
-    connStr = GlobalValues['connString']
-    rep = str(checkvar.get())
-    err = testConnString(connStr,esTest=0)
-    print err
-    if err==0:
-        logwin = LogWindow()
+    err = 0
+    try:
+        connStr = GlobalValues['connString']
+        rep = str(checkvar.get())
+        err = testConnString(connStr,esTest=0)
+    except Exception,e:
+        err = 1
+    if err == 0:
+        logwin,mainWin = LogWindow()
         stdout_old = sys.stdout
         sys.stdout = Std_redirector(logwin)
         time_ini = dt.datetime.now()
-        print "Carga de archivos iniciada: " + time_ini.strftime("%d-%m-%Y %H:%M:%S")
-        logwin.update()
         try:
-            metPer.LoadPerfilMulti(path,connStr,rep,logwin)
-            time_fin = dt.datetime.now()
-            print "Carga de archivos finalizada: " + time_fin.strftime("%d-%m-%Y %H:%M:%S")
-            print "Tiempo de ejecucion: " + str(time_fin-time_ini)
+            path = str(rutaP.get())
         except Exception,e:
-            print "Error de ejecucion:\n" + str(e)
+            print "ERROR con la ruta especificada: " + str(e)
+            err=1
+        if err==0:
+            print "Carga de archivos iniciada: " + time_ini.strftime("%d-%m-%Y %H:%M:%S")
+            logwin.update()
+            try:
+                metPer.LoadPerfilMulti(path,connStr,rep)
+                time_fin = dt.datetime.now()
+                print "Carga de archivos finalizada: " + time_fin.strftime("%d-%m-%Y %H:%M:%S")
+                print "Tiempo de ejecucion: " + str(time_fin-time_ini)
+            except Exception,e:
+                print "Error de ejecucion:\n" + str(e)
         sys.stdout = stdout_old
+        mainWin.title("Log: Finalizado")
 # Fin funcion
 
 def formatoRuta(rutaAux):
@@ -141,7 +150,7 @@ def EdoConexion(estado):
 def LogWindow():
     logg = Toplevel()
     time.sleep(3)
-    logg.title("Log")
+    logg.title("Log: Ejecutandose...")
     S = Scrollbar(logg)
     T = Text(logg, height=20, width=70)
     S.pack(side=RIGHT, fill=Y)
@@ -151,7 +160,7 @@ def LogWindow():
     exitB = Button(logg,width=10,text="Salir",command=salir).pack(side=BOTTOM)
     aceptaB = Button(logg,width=10,text="Aceptar",command=logg.destroy).pack(side=BOTTOM)
     cancelaB = Button(logg,width=10,text="Cancelar",command=logg.destroy).pack(side=BOTTOM)
-    return T
+    return T,logg
 #   Fin de la funcion
 
 class Std_redirector(object):
@@ -161,23 +170,15 @@ class Std_redirector(object):
     def write(self,string):
         self.widget.insert(END,string)
         self.widget.see(END)
+        self.widget.update()
 
 def cancelaCarga(self):
     self.destroy()
     #print "ERROR: Carga de archivos cancelada"
 
-def testing1():
-    logwin = LogWindow()
-    stdout_old = sys.stdout
-    sys.stdout = Std_redirector(logwin)
-    newtext = "hola mundo\n"
-    #logwin.insert(END, newtext)
-    print "testing\n"
-    print "hola"
-    print"mundo"
-    sys.stdout = stdout_old
-    print "sali"
+#def testing1():
 #   Fin funcion
+
 
 
 
