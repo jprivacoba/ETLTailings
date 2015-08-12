@@ -17,6 +17,7 @@ def LoadPerfilMulti(path,connStr,reprocesa):
 #   Fin de la funcion
 
 def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
+    temp = "" + "temp."
     fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
     estado = "'"+str(reprocesa)+"'"
     conn = ogr.Open(connStr)
@@ -31,11 +32,12 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
         print "Cargando proyecto " + proyecto
         for fichero in ficheros:
             (nombreFichero, extension) = os.path.splitext(fichero)
-            if(extension == ".txt"):
+            perfilM = nombreFichero.upper()
+            if(extension == ".txt" and perfilM.find("PERFIL")==0):
                 perfil=nombreFichero.replace(" ","")
                 print 'Cargando archivo "'+str(fichero)+'"'
                 dataPerfil=DatosPerfil(path+fichero)
-                tablename="temp." + str(numP) + " " + perfil + " " + proyecto
+                tablename= temp + str(numP) + " " + perfil + " " + proyecto
                 CargaArchivoPerfil(connStr,tablename,dataPerfil)
                 files.append(nombreFichero+extension)
         # Actualiza tabla proyectos_perfiles
