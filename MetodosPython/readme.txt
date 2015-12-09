@@ -1,0 +1,1 @@
+Despues de compilar setup.py en py2exe se debe copiar la carpetA "logo"  dentro de la carpeta "dist", para poder distribuir el ejecutable

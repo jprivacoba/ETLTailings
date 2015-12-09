@@ -1,4 +1,7 @@
-#__author__ = 'Arnol'
+# Autor : Arnol Garcia
+# Version : 1.1.0
+# Fecha : 07/12/2015
+
 
 import os
 from osgeo import ogr,osr
@@ -17,6 +20,12 @@ GlobalValues['host'] = "" + "54.94.215.131"# "152.231.85.226"
 GlobalValues['dbname'] = "" + "HGI" #"Testing_ETL"
 GlobalValues['user'] = "" + "postgres"
 GlobalValues['password'] = "" + "Admin321" #"admin"
+
+GlobalValues['host'] = "" + "152.231.85.226"
+GlobalValues['dbname'] = "" + "Testing_ETL"
+GlobalValues['user'] = "" + "postgres"
+GlobalValues['password'] = "" + "admin"
+
 GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %(GlobalValues['host'],
                                                                            GlobalValues['dbname'],
                                                                            GlobalValues['user'],
@@ -113,7 +122,7 @@ def paramConeccion():
     dbPW = StringVar()
     dbPW.set(GlobalValues['password'])
     Lpass = Label(w2, text='Password').grid(row=4,column=1)
-    Epass = Entry(w2, textvariable=dbPW).grid(row=4,column=2)
+    Epass = Entry(w2,show="*",width = 20,textvariable=dbPW).grid(row=4,column=2)
     bTest = Button(w2, width=8, text='Test',command=lambda: testConn(dbServer.get(),
                                                             dbName.get(),
                                                             dbUser.get(),
@@ -128,6 +137,7 @@ def paramConeccion():
                                                             dbPW.get())).grid(row=5,column=4)
     w2L53 = Label(w2, text=" ").grid(row=5,column=3)
     w2L55 = Label(w2, text=" ").grid(row=5,column=5)
+    w2.iconbitmap('.\logo\logo_hgi.ico')
 
 
 def aceptaConn(window,Server,Name,User,PW):
@@ -141,11 +151,12 @@ def aceptaConn(window,Server,Name,User,PW):
 def EdoConexion(estado):
     w3=Toplevel()
     w3.title("HGI Tailings: parametros de conexion")
-    w3lab1 = Label(w3, text="").grid(row=1,column=1)
-    w3lab2 = Label(w3, width=20,text=estado).grid(row=2,column=1)
-    w3lab3 = Label(w3, text="").grid(row=3,column=1)
-    w3bOK = Button(w3, text='Aceptar',command=w3.destroy).grid(row=4,column=1)
-    w3lab5 = Label(w3, text="").grid(row=5,column=1)
+    Label(w3, text="").grid(row=1,column=1)
+    Label(w3, width=20,text=estado).grid(row=2,column=1)
+    Label(w3, text="").grid(row=3,column=1)
+    Button(w3, text='Aceptar',command=w3.destroy).grid(row=4,column=1)
+    Label(w3, text="").grid(row=5,column=1)
+    w3.iconbitmap('.\logo\logo_hgi.ico')
 
 def LogWindow():
     logg = Toplevel()
@@ -160,6 +171,7 @@ def LogWindow():
     exitB = Button(logg,width=10,text="Salir",command=salir).pack(side=BOTTOM)
     aceptaB = Button(logg,width=10,text="Aceptar",command=logg.destroy).pack(side=BOTTOM)
     cancelaB = Button(logg,width=10,text="Cancelar",command=logg.destroy).pack(side=BOTTOM)
+    logg.iconbitmap('.\logo\logo_hgi.ico')
     return T,logg
 #   Fin de la funcion
 
@@ -176,8 +188,7 @@ def cancelaCarga(self):
     self.destroy()
     #print "ERROR: Carga de archivos cancelada"
 
-#def testing1():
-#   Fin funcion
+
 
 
 
@@ -186,9 +197,7 @@ def cancelaCarga(self):
 
 # Ventana principal
 w1 = Tk()
-
-# Titulo de la ventana
-w1.title('HGI Tailings: Cargador masivo de archivos de perfiles')
+w1.title('HGI Tailings: Carga de perfiles')
 
 # 1ra fila (en blanco
 l = Label(w1, text="").grid(row=1,column=2)
@@ -220,5 +229,26 @@ exitB = Button(w1, text='Salir', command=salir).grid(row=5,column=4)
 # 6ta fila (en blanco)
 l62 = Label(w1, text=" ").grid(row=6,column=2)
 
+# Crear ventana con la informacion de l aversion
+def info_version():
+    versionwin = Toplevel(w1)
+    Label(versionwin, text="Version 1.1.0").grid(row=2,column=2)
+    # Labels en blanco en la primera y tercera fila/columna
+    Label(versionwin, width=10,text='').grid(row=1,column=1)
+    Label(versionwin, width=10,text='').grid(row=3,column=3)
+    versionwin.iconbitmap('.\logo\logo_hgi.ico')
+
+# Crear menu
+menubar = Menu(w1)
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Exit", command=w1.quit)
+menubar.add_cascade(label="File", menu=filemenu)
+helpmenu = Menu(menubar, tearoff=0)
+helpmenu.add_command(label="About...", command=info_version)
+menubar.add_cascade(label="Help", menu=helpmenu)
+w1.config(menu=menubar)
+
+
 # Iniciar ventana
+w1.iconbitmap('.\logo\logo_hgi.ico')
 w1.mainloop()

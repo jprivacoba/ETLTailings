@@ -1,28 +1,32 @@
 # -*- coding: utf-8 -*-
 
-#from distutils.core import setup
-#import py2exe
 
 #setup(console=['InterfazPerfiles.py'])
+
+# Ejecutar en consola como "python setup.py py2exe"
+
+
 
 
 import sys
 from distutils.core import setup
 
+
 kwargs = {}
 if 'py2exe' in sys.argv:
     import py2exe
     kwargs = {
-        'console' : [{
+        # Usar 'windows' en vez de 'console' para evitar que aparezca la ventana del cmd al ejecutar el .exe
+        'windows' : [{
             'script'         : 'InterfazPerfiles.py',
             'description'    : 'Interfaz para la carga de perfiles.',
-            #'icon_resources' : [(0, 'icono.ico')]
+            'icon_resources' : [(0, 'logo_hgi.ico')]
             }],
         'zipfile' : None,
         'options' : { 'py2exe' : {
             'dll_excludes'   : ['MSVCP90.dll','w9xpopen.exe','mswsock.dll','powrprof.dll'],
             'packages'       : ['win32api'],
-            #'bundle_files'   : 2,
+            #'bundle_files'   : 1,
             'compressed'     : True,
             'optimize'       : 2
             }},
