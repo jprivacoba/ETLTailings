@@ -1,1 +1,1 @@
-Despues de compilar setup.py en py2exe se debe copiar la carpetA "logo"  dentro de la carpeta "dist", para poder distribuir el ejecutable
+Despues de compilar setup.py en py2exe (en la consola) se debe copiar la carpeta "logo"  dentro de la carpeta "dist", para poder distribuir el ejecutable
