@@ -1,7 +1,7 @@
 # Autor : Arnol Garcia
-# Version : 1.1.2
 # Fecha : 24/02/2016
-
+Version = "2.0.0"
+test_path ='C:/Users/Arnol/Downloads/test'
 
 import os
 from osgeo import ogr,osr
@@ -17,24 +17,26 @@ import datetime as dt
 #TODO: borrar valores iniciales de configuarcion
 GlobalValues = {}
 GlobalValues['host'] = "" + "54.94.215.131"# "152.231.85.226"
+GlobalValues['port'] = "" + "5432"
 GlobalValues['dbname'] = "" + "HGI_test" #"Testing_ETL"
 GlobalValues['user'] = "" + "postgres"
 GlobalValues['password'] = "" + "Admin321" #"admin"
 
-"""
-GlobalValues['host'] = "" + "152.231.85.226"
-GlobalValues['dbname'] = "" + "Testing_ETL"
-GlobalValues['user'] = "" + "postgres"
-GlobalValues['password'] = ""
-"""
-
-GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %(GlobalValues['host'],
-                                                                           GlobalValues['dbname'],
-                                                                           GlobalValues['user'],
-                                                                           GlobalValues['password'])
 
 
+
+GlobalValues['connString'] = "PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" %(GlobalValues['host'],
+                                                                                  GlobalValues['port'],
+                                                                                  GlobalValues['dbname'],
+                                                                                  GlobalValues['user'],
+                                                                                  GlobalValues['password'])
+# Test del connstring
+#print GlobalValues['connString']
+
+
+# ----------------------------------------------
 # Interfaz grafica
+# ----------------------------------------------
 def subeArchivos():
     err = 0
     try:
@@ -83,8 +85,64 @@ def salir():
     os._exit(0)
 #   Fin funcion
 
-def testConn(dbServer,dbName,dbUser,dbPW):
-    connString = 'PG: host=%s dbname=%s user=%s password=%s' %(dbServer,dbName,dbUser,dbPW)
+# ----------------------------------------------
+# Interfaz grafica de loa parametros de conexion
+# ----------------------------------------------
+def paramConeccion():
+    # Ventana de coneccion a BD
+    w2 = Toplevel()
+    w2.title("HGI Tailings: parametros de conexion")
+
+    dbServer = StringVar()
+    dbServer.set(GlobalValues['host'])
+    Lserver = Label(w2, width=15,text='DB Server').grid(row=1,column=1)
+    Eserver = Entry(w2, textvariable=dbServer).grid(row=1,column=2)
+
+    dbPort = StringVar()
+    dbPort.set(GlobalValues['port'])
+    Lport = Label(w2, width=15,text='DB Port').grid(row=2,column=1)
+    Eport = Entry(w2, textvariable=dbPort).grid(row=2,column=2)
+
+    dbName = StringVar()
+    dbName.set(GlobalValues['dbname'])
+    Lname = Label(w2, text='DB Name').grid(row=3,column=1)
+    Ename = Entry(w2, textvariable=dbName).grid(row=3,column=2)
+
+    dbUser = StringVar()
+    dbUser.set(GlobalValues['user'])
+    Luser = Label(w2, text='User').grid(row=4,column=1)
+    Euser = Entry(w2, textvariable=dbUser).grid(row=4,column=2)
+
+    dbPW = StringVar()
+    dbPW.set(GlobalValues['password'])
+    Lpass = Label(w2, text='Password').grid(row=5,column=1)
+    Epass = Entry(w2,show="*",width = 20,textvariable=dbPW).grid(row=5,column=2)
+
+    bTest = Button(w2, width=8, text='Test',command=lambda: testConn(dbServer.get(),
+                                                            dbPort.get(),
+                                                            dbName.get(),
+                                                            dbUser.get(),
+                                                            dbPW.get()))
+    bTest.grid(row=6,column=2)
+
+    bSave = Button(w2, width=8,text='Guardar',command=lambda: SaveConn(w2,
+                                                            dbServer.get(),
+                                                            dbPort.get(),
+                                                            dbName.get(),
+                                                            dbUser.get(),
+                                                            dbPW.get()))
+    bSave.grid(row=6,column=4)
+
+    bCancela = Button(w2, width=8,text='Cancelar',command=lambda: CancelaConn(w2))
+    bCancela.grid(row=6,column=6)
+
+    w2L62 = Label(w2, text=" ").grid(row=6,column=3)
+    w2L64 = Label(w2, text=" ").grid(row=6,column=5)
+
+    w2.iconbitmap('.\logo\logo_hgi.ico')
+
+def testConn(dbServer,dbPort,dbName,dbUser,dbPW):
+    connString ="PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" %(dbServer,dbPort,dbName,dbUser,dbPW)
     testConnString(connString)
     # Fin funcion
 
@@ -105,50 +163,19 @@ def testConnString(connStr,esTest=1):
         EdoConexion(texto)
     return esError
 
-def paramConeccion():
-    # Ventana de coneccion a BD
-    w2 = Toplevel()
-    w2.title("HGI Tailings: parametros de conexion")
-    dbServer = StringVar()
-    dbServer.set(GlobalValues['host'])
-    Lserver = Label(w2, width=15,text='DB Server').grid(row=1,column=1)
-    Eserver = Entry(w2, textvariable=dbServer).grid(row=1,column=2)
-    dbName = StringVar()
-    dbName.set(GlobalValues['dbname'])
-    Lname = Label(w2, text='DB Name').grid(row=2,column=1)
-    Ename = Entry(w2, textvariable=dbName).grid(row=2,column=2)
-    dbUser = StringVar()
-    dbUser.set(GlobalValues['user'])
-    Luser = Label(w2, text='User').grid(row=3,column=1)
-    Euser = Entry(w2, textvariable=dbUser).grid(row=3,column=2)
-    dbPW = StringVar()
-    dbPW.set(GlobalValues['password'])
-    Lpass = Label(w2, text='Password').grid(row=4,column=1)
-    Epass = Entry(w2,show="*",width = 20,textvariable=dbPW).grid(row=4,column=2)
-    bTest = Button(w2, width=8, text='Test',command=lambda: testConn(dbServer.get(),
-                                                            dbName.get(),
-                                                            dbUser.get(),
-                                                            dbPW.get())).grid(row=5,column=2)
-    #TODO: revisar si dejar el check o que el usuario siempre tenga que ingresar los parametros
-    #save = IntVar()
-    #Csave = Checkbutton(w2, text="Guardar parametros", variable=save).grid(row=5,column=3)
-    bOK = Button(w2, width=8,text='Aceptar',command=lambda: aceptaConn(w2,
-                                                            dbServer.get(),
-                                                            dbName.get(),
-                                                            dbUser.get(),
-                                                            dbPW.get())).grid(row=5,column=4)
-    w2L53 = Label(w2, text=" ").grid(row=5,column=3)
-    w2L55 = Label(w2, text=" ").grid(row=5,column=5)
-    w2.iconbitmap('.\logo\logo_hgi.ico')
-
-
-def aceptaConn(window,Server,Name,User,PW):
-    GlobalValues['connString'] = 'PG: host=%s dbname=%s user=%s password=%s' %(Server,Name,User,PW)
+def SaveConn(window,Server,Port,Name,User,PW):
     GlobalValues['host'] = Server
+    GlobalValues['port'] = Port
     GlobalValues['dbname'] = Name
     GlobalValues['user'] = User
     GlobalValues['password'] = PW
+    GlobalValues['connString'] = "PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" %(Server,Port,Name,User,PW)
     window.destroy()
+    # FIn funcion
+
+def CancelaConn(window):
+    window.destroy()
+    # FIn funcion
 
 def EdoConexion(estado):
     w3=Toplevel()
@@ -160,6 +187,10 @@ def EdoConexion(estado):
     Label(w3, text="").grid(row=5,column=1)
     w3.iconbitmap('.\logo\logo_hgi.ico')
 
+
+# ----------------------------------------------
+# Interfaz grafica para el log
+# ----------------------------------------------
 def LogWindow():
     logg = Toplevel()
     time.sleep(3)
@@ -194,10 +225,9 @@ def cancelaCarga(self):
 
 
 
-
-# Inicializar Interfaz Grafica para carga masiva
-
-# Ventana principal
+# ----------------------------------------------
+# Inicializar Interfaz grafica de la ventana principal
+# ----------------------------------------------
 w1 = Tk()
 w1.title('HGI Tailings: Carga de perfiles')
 
@@ -214,7 +244,7 @@ l3 = Label(w1, width=10,text='Ruta:')
 l3.grid(row=3,column=1)
 rutaP = StringVar()
 #TODO: Setear valor de rutaP olo para testing, eliminar despues
-#rutaP.set("C:\Users\Arnol\Desktop\TestPerfiles")
+rutaP.set(test_path)
 e3 = Entry(w1, width=40,textvariable=rutaP).grid(row=3,column=2) # Extrae ruta
 b3 = Button(w1, width=15,text='Seleccionar carpeta',command=rutaDir).grid(row=3,column=4)
 l33 = Label(w1,width=1,text='').grid(row=3,column=3)
@@ -238,7 +268,7 @@ l62 = Label(w1, text=" ").grid(row=6,column=2)
 # Crear ventana con la informacion de l aversion
 def info_version():
     versionwin = Toplevel(w1)
-    Label(versionwin, text="Version 1.1.2").grid(row=2,column=2)
+    Label(versionwin, text=Version).grid(row=2,column=2)
     # Labels en blanco en la primera y tercera fila/columna
     Label(versionwin, width=20,text='').grid(row=1,column=1)
     Label(versionwin, width=20,text='').grid(row=3,column=3)

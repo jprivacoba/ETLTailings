@@ -1,14 +1,15 @@
 #__author__ = 'Arnol'
 # Metodos para la interfaz grafica para subir archivos de perfiles
 
-import os
+import os, sys
 from osgeo import ogr,osr
 
 
 def LoadPerfilMulti(path,connStr,reprocesa):
-    proyectos = os.listdir(path)
+    proyectos = next(os.walk(path))[1]
     for i in range(len(proyectos)):
         proy=FormatoProyecto(proyectos[i])
+        print "\nCargando proyecto %s (%s/%s)" %(proy,i+1,len(proyectos))
         newpath = path+ "/" + proyectos[i] + "/"
         try:
             LoadPerfilSingle(newpath,proy,connStr,reprocesa)
@@ -29,33 +30,32 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     try:
         for feature in numPresults:
             numP = str(feature.GetField("crea_proyecto"))
-        #files = [] # Al parecer esto no es necesario
-        #Lista con todos los archivos del directorio:
+        codeError_CargaArchivo = 0
         ficheros = os.listdir(path)
-        print "/nCargando proyecto " + proyecto
+        #print "\nCargando proyecto " + proyecto
         for fichero in ficheros:
             (nombreFichero, extension) = os.path.splitext(fichero)
-            perfilM = nombreFichero.upper()
-            if(extension == ".txt" and perfilM.find("PERFIL")==0):
-                perfil=nombreFichero.replace(" ","")
-                print 'Cargando archivo "'+str(fichero)+'"'
+            perfilM = FormatoNombreFichero(nombreFichero)
+            if(extension.lower() == ".txt" and perfilM.find("PERFIL")==0):
+                perfil=perfilM.replace(" ","")
+                print 'Leyendo archivo ... "'+str(fichero)+'"'
                 dataPerfil = ""
                 try:
                     dataPerfil=DatosPerfil(path+fichero)
                 except Exception,e:
-                    print "ERROR al leer el archivo de perfil" + fichero + " :" + str(e)
+                    print "ERROR al leer el archivo de perfil " + fichero + " :" + str(e)
                 tablename= temp + str(numP) + " " + perfil + " " + proyecto
-                codeError_CargaArchivo = 0
+                #print str(tablename)
                 try:
                     codeError_CargaArchivo = CargaArchivoPerfil(connStr,tablename,dataPerfil)
                 except Exception,e:
                     print "ERROR al cargar los datos del perfil " + fichero + " :" + str(e)
-                #files.append(nombreFichero+extension) # Al parecer esto no es necesario
         # Actualiza tabla proyectos_perfiles
         sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,%s)' %(int(numP),estado)
         EsError = conn.ExecuteSQL(sql2)
         for feature in EsError:
             codeError = feature.GetField("guarda_proyecto")
+            #print str(codeError)
             if codeError==0 and codeError_CargaArchivo == 0:
                 print "Proyecto %s procesado exitosamente\n"%(proyecto)
             else:
@@ -64,6 +64,24 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
         print "ERROR al crear proyecto " + proyecto + " :" + str(e)
     conn.Destroy()
 #   Fin de la funcion
+
+def FormatoNombreFichero(nombre_old):
+    nombre_new = nombre_old.upper()
+    SegundoesNumero = 0
+    if len(nombre_new)>=2:
+        SegundoesNumero = isNumber(nombre_new[1])
+    if nombre_new.find("P")==0 and SegundoesNumero==1:
+        nombre_new = nombre_new.replace("P","PERFIL")
+    return nombre_new
+    #Fin de la funcion
+
+def isNumber(str):
+    try:
+        float(str)
+        return 1
+    except Exception,e:
+        return  0
+    #Fin de la funcion
 
 
 def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no abrir/cerrar a cada crato
@@ -111,18 +129,25 @@ def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no
 
 
 def DatosPerfil(filename):
+    print 'Leyendo archivo ' + filename + ' ... '
     datos = []
-    file=open(filename)
-    line=file.readline()
-    # Encabezado
-    line=file.readline()
-    while (line != "" and line!="\n"): # Termina si llega al final del archivo o si hay una linea en blanco
-        Line=line.split("\t")
-        x=float(Line[0].replace(",","."))
-        y=float(Line[1].replace(",","."))
-        datos.append([x,y])
-        line=file.readline()
-    file.close()
+    #file=open(filename)
+    lineasprocesadas = 0
+    num_lineas = NumLinesInFile(filename)
+    with open(filename) as infile:
+        infile.seek(0)
+        for line in infile:
+            Line=line.split("\t")
+            # Solo procesar lineas separadas por tabulacion, con dos columnas
+            if len(Line) == 2:
+                x=Line[0].replace(",",".")
+                y=Line[1].replace(",",".")
+                # En caso que tenga cabecera los datos no se agregan
+                if isNumber(x)==1 and isNumber(y):
+                    datos.append([float(x),float(y)])
+                    lineasprocesadas = lineasprocesadas + 1
+                    PrintProgress('lineas procesadas','',lineasprocesadas,num_lineas)
+    infile.close()
     return datos
 #   Fin de la funcion
 
@@ -138,3 +163,21 @@ def FormatoProyecto(StrAux):
     else:
         newStr = "00_00_0000"
     return newStr
+
+def PrintProgress(texto_pre,texto_post, progreso, total):
+    #out = '%s (%s/%s) %s ...      ' %(texto_pre, progreso, total, texto_post)  # The output
+    #bs = '\b' * 100            # The backspace
+    out = '%s (%s/%s) %s ...      \r' %(texto_pre, progreso, total, texto_post)  # The output'
+    #print bs,
+    print out,
+    if progreso == total:
+        print ''
+    # Fin de la funcion
+
+def NumLinesInFile(file):
+    # devuelve el numero de lineas no 'nulas'
+    with open(file) as infile:
+        num_lines = sum(1 for line in infile if line.strip())
+    infile.close()
+    return num_lines
+    # Fin de la funcion
