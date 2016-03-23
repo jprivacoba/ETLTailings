@@ -35,7 +35,7 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
         #print "\nCargando proyecto " + proyecto
         for fichero in ficheros:
             (nombreFichero, extension) = os.path.splitext(fichero)
-            perfilM = FormatoNombreFichero(nombreFichero)
+            perfilM = FormatoNombreFichero2(nombreFichero)
             if(extension.lower() == ".txt" and perfilM.find("PERFIL")==0):
                 perfil=perfilM.replace(" ","")
                 print 'Leyendo archivo ... "'+str(fichero)+'"'
@@ -53,7 +53,7 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
         # Actualiza tabla proyectos_perfiles
         sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,%s)' %(int(numP),estado)
         EsError = conn.ExecuteSQL(sql2)
-        for feature in EsError:
+        for feature in EsError: # TODO: ver si se puede cambiar el for por otra cosa, pues el resultado es un solo registro... tal vez EsError[0] o algo asi
             codeError = feature.GetField("guarda_proyecto")
             #print str(codeError)
             if codeError==0 and codeError_CargaArchivo == 0:
@@ -65,6 +65,8 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     conn.Destroy()
 #   Fin de la funcion
 
+
+
 def FormatoNombreFichero(nombre_old):
     nombre_new = nombre_old.upper()
     SegundoesNumero = 0
@@ -75,6 +77,12 @@ def FormatoNombreFichero(nombre_old):
     return nombre_new
     #Fin de la funcion
 
+def FormatoNombreFichero2(nombre_old):
+    nombre_new = nombre_old.upper()
+    nombre_new = "PERFIL_" + nombre_new
+    return nombre_new
+    #Fin de la funcion
+
 def isNumber(str):
     try:
         float(str)
@@ -82,6 +90,7 @@ def isNumber(str):
     except Exception,e:
         return  0
     #Fin de la funcion
+
 
 
 def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no abrir/cerrar a cada crato
@@ -106,6 +115,7 @@ def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no
         layer = conn.CreateLayer(table, srs, ogr.wkbPoint, ['OVERWRITE=YES'] )
         layer.CreateField(ogr.FieldDefn("distancia", ogr.OFTReal))
         layer.CreateField(ogr.FieldDefn("profundidad", ogr.OFTReal))
+        layer.CreateField(ogr.FieldDefn("dem", ogr.OFTReal))
     except Exception,e:
         codeError = 1
         print "ERROR al tratar de crear los campos distancia y profundidad en la tabla " + table + " :" + str(e)
@@ -118,6 +128,7 @@ def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no
         # Set the attributes using the values from the data
         feature.SetField("distancia", datos[i][0])
         feature.SetField("profundidad", datos[i][1])
+        feature.SetField("dem", datos[i][2])
         # Crear layer en la BD
         layer.CreateFeature(feature)
         # Destroy the feature to free resources
@@ -138,15 +149,33 @@ def DatosPerfil(filename):
         infile.seek(0)
         for line in infile:
             Line=line.split("\t")
-            # Solo procesar lineas separadas por tabulacion, con dos columnas
-            if len(Line) == 2:
+            # Solo procesar lineas separadas por tabulacion, con al menos 2 columnas
+            if len(Line) >= 2:
+                # Agregar primera columna (distancia)
                 x=Line[0].replace(",",".")
+                # Agregar segunda columna (profundidad)
                 y=Line[1].replace(",",".")
+                z=None
+                # Agregar tercera columna (DEM) si existe
+                if len(Line) == 3:
+                    z=Line[2].replace(",",".")
                 # En caso que tenga cabecera los datos no se agregan
-                if isNumber(x)==1 and isNumber(y):
-                    datos.append([float(x),float(y)])
+                if isNumber(x)==1:
+                    try:
+                        x=float(x)
+                    except ValueError:
+                        x=None
+                    try:
+                        y=float(y)
+                    except ValueError:
+                        y=None
+                    try:
+                        z=float(z)
+                    except ValueError:
+                        z=None
+                    datos.append([x, y, z])
                     lineasprocesadas = lineasprocesadas + 1
-                    PrintProgress('lineas procesadas','',lineasprocesadas,num_lineas)
+                    #PrintProgress('lineas procesadas','',lineasprocesadas,num_lineas)
     infile.close()
     return datos
 #   Fin de la funcion

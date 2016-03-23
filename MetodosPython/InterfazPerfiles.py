@@ -1,7 +1,7 @@
 # Autor : Arnol Garcia
 # Fecha : 24/02/2016
 Version = "2.0.0"
-test_path ='C:/Users/Arnol/Downloads/test'
+test_path ='C:/Users/Arnol/GitHub/ETLTailings/MacroVB/data_procesada'
 
 import os
 from osgeo import ogr,osr

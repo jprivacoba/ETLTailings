@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5268626b-f5ac-4ab8-8eb8-8b94767f769f" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\Arnol\GitHub\ETLTailings\MacroVB\data_proyectos\proyecto_ejemplo_2016.03.17\D1.XLS" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Arnol\GitHub\ETLTailings\MacroVB\data_proyectos\proyecto_ejemplo_2016.03.17\D6.XLS" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Arnol\GitHub\ETLTailings\MacroVB\data_proyectos\proyecto_ejemplo_2016.03.17\D8.XLS" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Arnol\GitHub\ETLTailings\MetodosPython\testing.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MacroVB/EjecutarMacroPerfiles.xls" afterPath="$PROJECT_DIR$/MacroVB/EjecutarMacroPerfiles.xls" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py" afterPath="$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MetodosPython/metodosPerfiles.py" afterPath="$PROJECT_DIR$/MetodosPython/metodosPerfiles.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MetodosPython/testing file.py" afterPath="$PROJECT_DIR$/MetodosPython/testing file.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ETLTailings.iws" />
@@ -31,19 +32,29 @@
         <entry file="file://$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="61" column="28" selection-start-line="61" selection-start-column="28" selection-end-line="61" selection-end-column="28" />
+              <caret line="3" column="20" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="20" />
               <folding>
-                <element signature="e#106#115#0" expanded="true" />
+                <element signature="e#133#142#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="metodosPerfiles.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="testing file.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/MetodosPython/testing file.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.80199665">
+              <caret line="43" column="10" selection-start-line="43" selection-start-column="10" selection-end-line="43" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="metodosPerfiles.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MetodosPython/metodosPerfiles.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.37041286">
-              <caret line="19" column="14" selection-start-line="19" selection-start-column="14" selection-end-line="19" selection-end-column="14" />
+            <state vertical-scroll-proportion="-13.586206">
+              <caret line="177" column="21" selection-start-line="177" selection-start-column="21" selection-end-line="177" selection-end-column="21" />
               <folding>
                 <element signature="e#90#104#0" expanded="true" />
               </folding>
@@ -69,8 +80,8 @@
         <option value="$PROJECT_DIR$/MetodosPython/test.py" />
         <option value="$PROJECT_DIR$/MetodosPython/setup.py" />
         <option value="$PROJECT_DIR$/MetodosPython/testing.py" />
-        <option value="$PROJECT_DIR$/MetodosPython/testing file.py" />
         <option value="$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py" />
+        <option value="$PROJECT_DIR$/MetodosPython/testing file.py" />
         <option value="$PROJECT_DIR$/MetodosPython/metodosPerfiles.py" />
       </list>
     </option>
@@ -107,8 +118,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -161,6 +170,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -168,7 +179,7 @@
     <property name="recentsLimit" value="5" />
     <property name="FullScreen" value="false" />
   </component>
-  <component name="RunManager" selected="Python.InterfazPerfiles">
+  <component name="RunManager" selected="Python.testing file">
     <configuration default="false" name="testing" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -367,8 +378,8 @@
     </list>
     <recent_temporary>
       <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Python.InterfazPerfiles" />
-        <item index="1" class="java.lang.String" itemvalue="Python.testing file" />
+        <item index="0" class="java.lang.String" itemvalue="Python.testing file" />
+        <item index="1" class="java.lang.String" itemvalue="Python.InterfazPerfiles" />
         <item index="2" class="java.lang.String" itemvalue="Python.setup" />
         <item index="3" class="java.lang.String" itemvalue="Python.testing" />
       </list>
@@ -525,27 +536,27 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3145416" sideWeight="0.40111113" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32823366" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3145416" sideWeight="0.39586645" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32814237" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19688542" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32814237" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3003337" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32703003" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3145416" sideWeight="0.5988889" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3145416" sideWeight="0.60413355" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3991655" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3003337" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3991655" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -582,9 +593,31 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/MetodosPython/metodosPerfiles.py</url>
+          <line>82</line>
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/MetodosPython/metodosPerfiles.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/MetodosPython/metodosPerfiles.py</url>
+          <line>53</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" log-message="true" type="python-line">
+          <url>file://$PROJECT_DIR$/MetodosPython/metodosPerfiles.py</url>
+          <line>162</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -592,9 +625,29 @@
     <entry file="file://$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="61" column="28" selection-start-line="61" selection-start-column="28" selection-end-line="61" selection-end-column="28" />
+          <folding>
+            <element signature="e#133#142#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MetodosPython/metodosPerfiles.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#90#104#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
           <caret line="217" column="28" selection-start-line="217" selection-start-column="28" selection-end-line="217" selection-end-column="28" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -613,9 +666,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="43" column="11" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="11" />
-          <folding>
-            <element signature="e#56#69#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -624,7 +675,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="217" column="28" selection-start-line="217" selection-start-column="28" selection-end-line="217" selection-end-column="28" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -643,9 +694,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="43" column="11" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="11" />
-          <folding>
-            <element signature="e#56#69#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -654,7 +703,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -681,7 +730,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -708,7 +757,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="151" column="17" selection-start-line="151" selection-start-column="17" selection-end-line="151" selection-end-column="17" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -735,7 +784,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="139" column="76" selection-start-line="139" selection-start-column="76" selection-end-line="139" selection-end-column="76" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -762,7 +811,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="198" column="33" selection-start-line="198" selection-start-column="33" selection-end-line="198" selection-end-column="33" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -789,7 +838,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -806,7 +855,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -823,7 +872,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -856,13 +905,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MetodosPython/testing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="20" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -877,48 +919,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MetodosPython/testing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39600664">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MetodosPython/testing file.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.83830273">
-          <caret line="43" column="11" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="11" />
-          <folding>
-            <element signature="e#56#69#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MetodosPython/setup.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.40940368">
           <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="28" selection-start-line="61" selection-start-column="28" selection-end-line="61" selection-end-column="28" />
+          <caret line="3" column="20" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="20" />
           <folding>
-            <element signature="e#106#115#0" expanded="true" />
+            <element signature="e#133#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MetodosPython/metodosPerfiles.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37041286">
-          <caret line="19" column="14" selection-start-line="19" selection-start-column="14" selection-end-line="19" selection-end-column="14" />
+        <state vertical-scroll-proportion="-13.586206">
+          <caret line="177" column="21" selection-start-line="177" selection-start-column="21" selection-end-line="177" selection-end-column="21" />
           <folding>
             <element signature="e#90#104#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MetodosPython/testing file.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.80199665">
+          <caret line="43" column="10" selection-start-line="43" selection-start-column="10" selection-end-line="43" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>

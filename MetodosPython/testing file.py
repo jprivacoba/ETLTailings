@@ -29,7 +29,7 @@ def istext(filename,mode='r'):
 
 dir1 = 'C:/Users/Arnol/Downloads/Archive/10 Octubre/06.10.2015/Perfil 1.txt'
 dir2 = 'C:/Users/Arnol/Downloads/Archive/11 Noviembre/04.11.2015/P1.txt'
-dir3 = 'C:/Users/Arnol/Downloads/test/01.01.2016/p2.txt'
+dir3 = 'C:/Users/Arnol/GitHub/ETLTailings/MacroVB/data_procesada/04.02.2016/D1.txt'
 
 """
 print dir1 + ' es un archivo txt? = ' + str(istext(dir1))
