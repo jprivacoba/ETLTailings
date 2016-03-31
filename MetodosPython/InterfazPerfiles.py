@@ -1,7 +1,7 @@
 # Autor : Arnol Garcia
 # Fecha : 24/02/2016
 Version = "2.0.0"
-test_path ='C:/Users/Arnol/GitHub/ETLTailings/MacroVB/data_procesada'
+test_path ='C:/Users/Arnol/Desktop/Archive/nuevos_procesados_test'
 
 import os
 from osgeo import ogr,osr
@@ -11,27 +11,11 @@ import metodosPerfiles as metPer
 import sys
 import time
 import datetime as dt
+import Parametros as par
 
 
-#TODO: dejar los parametros de conexion en un archivo config.txt
-#TODO: borrar valores iniciales de configuarcion
-GlobalValues = {}
-GlobalValues['host'] = "" + "54.94.215.131"# "152.231.85.226"
-GlobalValues['port'] = "" + "5432"
-GlobalValues['dbname'] = "" + "HGI_test" #"Testing_ETL"
-GlobalValues['user'] = "" + "postgres"
-GlobalValues['password'] = "" + "Admin321" #"admin"
-
-
-
-
-GlobalValues['connString'] = "PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" %(GlobalValues['host'],
-                                                                                  GlobalValues['port'],
-                                                                                  GlobalValues['dbname'],
-                                                                                  GlobalValues['user'],
-                                                                                  GlobalValues['password'])
 # Test del connstring
-#print GlobalValues['connString']
+#print par.GlobalValues['connString']
 
 
 # ----------------------------------------------
@@ -40,7 +24,7 @@ GlobalValues['connString'] = "PG: host='%s' port='%s' dbname='%s' user='%s' pass
 def subeArchivos():
     err = 0
     try:
-        connStr = GlobalValues['connString']
+        connStr = par.GlobalValues['connString']
         rep = str(checkvar.get())
         err = testConnString(connStr,esTest=0)
     except Exception,e:
@@ -57,6 +41,7 @@ def subeArchivos():
             err=1
         if err==0:
             print "Carga de archivos iniciada: " + time_ini.strftime("%d-%m-%Y %H:%M:%S")
+            print "Parametros de conexion: %s"%(connStr)
             logwin.update()
             try:
                 metPer.LoadPerfilMulti(path,connStr,rep)
@@ -94,27 +79,27 @@ def paramConeccion():
     w2.title("HGI Tailings: parametros de conexion")
 
     dbServer = StringVar()
-    dbServer.set(GlobalValues['host'])
+    dbServer.set(par.GlobalValues['host'])
     Lserver = Label(w2, width=15,text='DB Server').grid(row=1,column=1)
     Eserver = Entry(w2, textvariable=dbServer).grid(row=1,column=2)
 
     dbPort = StringVar()
-    dbPort.set(GlobalValues['port'])
+    dbPort.set(par.GlobalValues['port'])
     Lport = Label(w2, width=15,text='DB Port').grid(row=2,column=1)
     Eport = Entry(w2, textvariable=dbPort).grid(row=2,column=2)
 
     dbName = StringVar()
-    dbName.set(GlobalValues['dbname'])
+    dbName.set(par.GlobalValues['dbname'])
     Lname = Label(w2, text='DB Name').grid(row=3,column=1)
     Ename = Entry(w2, textvariable=dbName).grid(row=3,column=2)
 
     dbUser = StringVar()
-    dbUser.set(GlobalValues['user'])
+    dbUser.set(par.GlobalValues['user'])
     Luser = Label(w2, text='User').grid(row=4,column=1)
     Euser = Entry(w2, textvariable=dbUser).grid(row=4,column=2)
 
     dbPW = StringVar()
-    dbPW.set(GlobalValues['password'])
+    dbPW.set(par.GlobalValues['password'])
     Lpass = Label(w2, text='Password').grid(row=5,column=1)
     Epass = Entry(w2,show="*",width = 20,textvariable=dbPW).grid(row=5,column=2)
 
@@ -164,12 +149,12 @@ def testConnString(connStr,esTest=1):
     return esError
 
 def SaveConn(window,Server,Port,Name,User,PW):
-    GlobalValues['host'] = Server
-    GlobalValues['port'] = Port
-    GlobalValues['dbname'] = Name
-    GlobalValues['user'] = User
-    GlobalValues['password'] = PW
-    GlobalValues['connString'] = "PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" %(Server,Port,Name,User,PW)
+    par.GlobalValues['host'] = Server
+    par.GlobalValues['port'] = Port
+    par.GlobalValues['dbname'] = Name
+    par.GlobalValues['user'] = User
+    par.GlobalValues['password'] = PW
+    par.GlobalValues['connString'] = "PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" %(Server,Port,Name,User,PW)
     window.destroy()
     # FIn funcion
 

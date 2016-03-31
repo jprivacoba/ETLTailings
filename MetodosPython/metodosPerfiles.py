@@ -30,28 +30,36 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     try:
         for feature in numPresults:
             numP = str(feature.GetField("crea_proyecto"))
+
         codeError_CargaArchivo = 0
         ficheros = os.listdir(path)
-        #print "\nCargando proyecto " + proyecto
+        numfichero = len(ficheros)
+        nextfichero = 1
+
         for fichero in ficheros:
             (nombreFichero, extension) = os.path.splitext(fichero)
             perfilM = FormatoNombreFichero2(nombreFichero)
-            if(extension.lower() == ".txt" and perfilM.find("PERFIL")==0):
+
+            if(extension.lower() == ".txt"):
                 perfil=perfilM.replace(" ","")
-                print 'Leyendo archivo ... "'+str(fichero)+'"'
+                print 'Cargando perfil "%s" (%s/%s)'%(str(fichero),nextfichero,numfichero)
                 dataPerfil = ""
+
                 try:
                     dataPerfil=DatosPerfil(path+fichero)
                 except Exception,e:
                     print "ERROR al leer el archivo de perfil " + fichero + " :" + str(e)
+
                 tablename= temp + str(numP) + " " + perfil + " " + proyecto
                 #print str(tablename)
                 try:
                     codeError_CargaArchivo = CargaArchivoPerfil(connStr,tablename,dataPerfil)
+                    #print 'perfil "%s" cargado con exito'%(str(fichero))
                 except Exception,e:
                     print "ERROR al cargar los datos del perfil " + fichero + " :" + str(e)
+                nextfichero = nextfichero + 1
         # Actualiza tabla proyectos_perfiles
-        sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,%s)' %(int(numP),estado)
+        sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,''%s'')' %(int(numP),str(estado))
         EsError = conn.ExecuteSQL(sql2)
         for feature in EsError: # TODO: ver si se puede cambiar el for por otra cosa, pues el resultado es un solo registro... tal vez EsError[0] o algo asi
             codeError = feature.GetField("guarda_proyecto")
@@ -79,7 +87,7 @@ def FormatoNombreFichero(nombre_old):
 
 def FormatoNombreFichero2(nombre_old):
     nombre_new = nombre_old.upper()
-    nombre_new = "PERFIL_" + nombre_new
+    #nombre_new = "PERFIL_" + nombre_new
     return nombre_new
     #Fin de la funcion
 
@@ -118,38 +126,71 @@ def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no
         layer.CreateField(ogr.FieldDefn("dem", ogr.OFTReal))
     except Exception,e:
         codeError = 1
-        print "ERROR al tratar de crear los campos distancia y profundidad en la tabla " + table + " :" + str(e)
+        print "ERROR al tratar de crear los campos de la tabla " + table + " :" + str(e)
 
     # Leer archivo y cargarlo en BD
-    N = len(datos)
-    for i in range(N):
-        # create the feature
-        feature = ogr.Feature(layer.GetLayerDefn())
-        # Set the attributes using the values from the data
-        feature.SetField("distancia", datos[i][0])
-        feature.SetField("profundidad", datos[i][1])
-        feature.SetField("dem", datos[i][2])
-        # Crear layer en la BD
-        layer.CreateFeature(feature)
-        # Destroy the feature to free resources
-        feature.Destroy()
-    # Destroy the data source to free resources
-    conn.Destroy()
+    try:
+        N = len(datos)
+        for i in range(N):
+            # create the feature
+            #feature = ogr.Feature(layer.GetLayerDefn())
+
+            # Set the attributes using the values from the data
+            dist = datos[i][0]
+            prof = datos[i][1]
+            dem = datos[i][2]
+            #feature.SetField("distancia", dist)
+            #feature.SetField("profundidad", prof)
+            #feature.SetField("dem", dem)
+
+            # Crear layer en la BD
+            #layer.CreateFeature(feature)
+            # Destroy the feature to free resources
+            #feature.Destroy()
+
+
+            # Probando con sql
+            nombretabla = table.split(".")
+            sql = 'INSERT INTO "%s"."%s"'%(nombretabla[0].lower(), nombretabla[1].lower())
+            sql1 = '("distancia") VALUES (%f)'%(dist)
+            if prof is not None:
+                sql1 = '("distancia","profundidad") VALUES (%f,%f)'%(dist, prof)
+                if dem is not None:
+                    sql1 = '("distancia","profundidad","dem") VALUES (%f,%f,%f)'%(dist, prof, dem)
+            else:
+                if dem is not None:
+                    sql1 = '("distancia","dem") VALUES (%f,%f)'%(dist, dem)
+
+            sql = sql + sql1
+            conn.ExecuteSQL(sql)
+
+        # Destroy the data source to free resources
+        conn.Destroy()
+    except Exception,e:
+        codeError = 1
+        print "ERROR al tratar de cargar los datos en la tabla " + table + " :" + str(e)
     return codeError
 #   Fin de la funcion
 
 
 def DatosPerfil(filename):
-    print 'Leyendo archivo ' + filename + ' ... '
+    #print 'Leyendo archivo ' + filename + ' ... '
     datos = []
-    #file=open(filename)
     lineasprocesadas = 0
     num_lineas = NumLinesInFile(filename)
+
     with open(filename) as infile:
         infile.seek(0)
         for line in infile:
             Line=line.split("\t")
             # Solo procesar lineas separadas por tabulacion, con al menos 2 columnas
+            aux = len(Line)
+            # Modificar en caso que sea 1 linea separada por varios espacios
+            if len(Line) == 1:
+                Line = DejaUnSoloEspacio(Line[0])
+                Line = Line.split(" ")
+            aux = len(Line)
+            # Procesar si hay al menos 2 columnas
             if len(Line) >= 2:
                 # Agregar primera columna (distancia)
                 x=Line[0].replace(",",".")
@@ -169,10 +210,11 @@ def DatosPerfil(filename):
                         y=float(y)
                     except ValueError:
                         y=None
-                    try:
-                        z=float(z)
-                    except ValueError:
-                        z=None
+                    if len(Line) == 3:
+                        try:
+                            z=float(z)
+                        except ValueError:
+                            z=None
                     datos.append([x, y, z])
                     lineasprocesadas = lineasprocesadas + 1
                     #PrintProgress('lineas procesadas','',lineasprocesadas,num_lineas)
@@ -201,7 +243,8 @@ def PrintProgress(texto_pre,texto_post, progreso, total):
     print out,
     if progreso == total:
         print ''
-    # Fin de la funcion
+# Fin de la funcion
+
 
 def NumLinesInFile(file):
     # devuelve el numero de lineas no 'nulas'
@@ -209,4 +252,12 @@ def NumLinesInFile(file):
         num_lines = sum(1 for line in infile if line.strip())
     infile.close()
     return num_lines
-    # Fin de la funcion
+# Fin de la funcion
+
+
+def DejaUnSoloEspacio(texto):
+    if texto.find("  ") > -1:
+        texto = texto.replace("  "," ")
+        texto = DejaUnSoloEspacio(texto)
+    return texto.strip()
+# Fin de la funcion
