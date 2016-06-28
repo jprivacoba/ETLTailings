@@ -1,21 +1,39 @@
+"""
 #__author__ = 'Arnol'
-# Metodos para la interfaz grafica para subir archivos de perfiles
+# Metodos para subir archivos de perfiles
+# Version: 3 (2016-06-20)
+
+"""
 
 import os, sys
 from osgeo import ogr,osr
 
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def LoadPerfilMulti(path,connStr,reprocesa):
     proyectos = next(os.walk(path))[1]
     for i in range(len(proyectos)):
-        proy=FormatoProyecto(proyectos[i])
-        print "\nCargando proyecto %s (%s/%s)" %(proy,i+1,len(proyectos))
-        newpath = path+ "/" + proyectos[i] + "/"
-        try:
-            LoadPerfilSingle(newpath,proy,connStr,reprocesa)
-        except Exception,e:
-            print "ERROR al procesar el proyecto %s : %s "%(str(proyectos[i]),str(e))
+        if(proyectos[i].replace(" ","")=="TOPOBASE"):
+            print "\nCargando la TOPO BASE (%s/%s)" %(i+1,len(proyectos))
+            logging.info("Cargando la TOPO BASE (%s/%s)", i+1, len(proyectos))
+            newpath = path+ "/" + proyectos[i] + "/"
+            try:
+                LoadTopoBase(newpath,connStr)
+            except Exception,e:
+                print "ERROR al procesar la TOPO BASE : %s "%(str(e))
+        else:
+            proy=FormatoProyecto(proyectos[i])
+            print "\nCargando proyecto %s (%s/%s)" %(proy,i+1,len(proyectos))
+            logging.info("Cargando proyecto %s (%s/%s)", proy, i+1, len(proyectos))
+            newpath = path+ "/" + proyectos[i] + "/"
+            try:
+                LoadPerfilSingle(newpath,proy,connStr,reprocesa)
+            except Exception,e:
+                print "ERROR al procesar el proyecto %s : %s "%(str(proyectos[i]),str(e))
+    print "\nEjecucion finalizada."
 #   Fin de la funcion
+
 
 def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     temp = "" + "temp."
@@ -42,7 +60,7 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
 
             if(extension.lower() == ".txt"):
                 perfil=perfilM.replace(" ","")
-                print 'Cargando perfil "%s" (%s/%s)'%(str(fichero),nextfichero,numfichero)
+                print 'Cargando perfil "%s" (%s/%s)... '%(str(fichero),nextfichero,numfichero),
                 dataPerfil = ""
 
                 try:
@@ -51,21 +69,20 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
                     print "ERROR al leer el archivo de perfil " + fichero + " :" + str(e)
 
                 tablename= temp + str(numP) + " " + perfil + " " + proyecto
-                #print str(tablename)
                 try:
-                    codeError_CargaArchivo = CargaArchivoPerfil(connStr,tablename,dataPerfil)
-                    #print 'perfil "%s" cargado con exito'%(str(fichero))
+                    codeError_CargaArchivo = CargaArchivoPerfilBySQL(connStr,tablename,dataPerfil)
                 except Exception,e:
                     print "ERROR al cargar los datos del perfil " + fichero + " :" + str(e)
                 nextfichero = nextfichero + 1
         # Actualiza tabla proyectos_perfiles
+        print "Consolidando proyecto en BD... ",
         sql2 = 'select  perfiles_procesados.guarda_proyecto(%d,''%s'')' %(int(numP),str(estado))
         EsError = conn.ExecuteSQL(sql2)
         for feature in EsError: # TODO: ver si se puede cambiar el for por otra cosa, pues el resultado es un solo registro... tal vez EsError[0] o algo asi
             codeError = feature.GetField("guarda_proyecto")
             #print str(codeError)
             if codeError==0 and codeError_CargaArchivo == 0:
-                print "Proyecto %s procesado exitosamente\n"%(proyecto)
+                print "Proyecto %s procesado correctamente\n"%(proyecto)
             else:
                 print "Proyecto %s procesado con errores\n"%(proyecto)
     except Exception,e:
@@ -74,6 +91,44 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
 #   Fin de la funcion
 
 
+def LoadTopoBase(path, connStr, reprocesa=True):
+    tablename = "perfiles_procesados.proyecto_perfiles_topo_base"
+    conn = ogr.Open(connStr)
+
+    if(reprocesa):
+        print "Eliminando TOPO BASE anterior... ",
+        sql = "TRUNCATE %s" %(tablename)
+        try:
+            conn.ExecuteSQL(sql)
+            print "ok"
+        except Exception,e:
+            print "ERROR a eliminar topo base anterior: %s"%(str(e))
+            return
+    ficheros = os.listdir(path)
+    numfichero = len(ficheros)
+    nextfichero = 1
+
+    for fichero in ficheros:
+        (nombreFichero, extension) = os.path.splitext(fichero)
+        perfil = FormatoNombreFichero2(nombreFichero)
+        perfil=perfil.replace(" ","")
+        if extension.lower() == ".txt":
+            print 'Cargando perfil "%s" (%s/%s)... '%(str(fichero),nextfichero,numfichero),
+            dataPerfil = ""
+
+            try:
+                dataPerfil=DatosPerfil(path+fichero)
+            except Exception,e:
+                print "ERROR al leer el archivo de perfil " + fichero + " :" + str(e)
+
+            try:
+                aux = CargaTopoBasePerfilBySQL(connStr, tablename, perfil, dataPerfil)
+            except Exception,e:
+                print "ERROR al cargar los datos del perfil " + fichero + " :" + str(e)
+            nextfichero += 1
+    print "TOPO BASE cargada correctamente"
+    conn.Destroy()
+#Fin de la funcion LoadTopoBase
 
 def FormatoNombreFichero(nombre_old):
     nombre_new = nombre_old.upper()
@@ -85,11 +140,12 @@ def FormatoNombreFichero(nombre_old):
     return nombre_new
     #Fin de la funcion
 
+
 def FormatoNombreFichero2(nombre_old):
     nombre_new = nombre_old.upper()
-    #nombre_new = "PERFIL_" + nombre_new
     return nombre_new
-    #Fin de la funcion
+#Fin de la funcion FormatoNombreFichero2
+
 
 def isNumber(str):
     try:
@@ -100,8 +156,7 @@ def isNumber(str):
     #Fin de la funcion
 
 
-
-def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no abrir/cerrar a cada crato
+def CargaArchivoPerfilBySQL(connStr,table,datos): #TODO: dejar solo una conexion y no abrir/cerrar a cada crato
     codeError = 0
     # Abrir la conexion
     try:
@@ -123,104 +178,130 @@ def CargaArchivoPerfil(connStr,table,datos): #TODO: dejar solo una conexion y no
         layer = conn.CreateLayer(table, srs, ogr.wkbPoint, ['OVERWRITE=YES'] )
         layer.CreateField(ogr.FieldDefn("distancia", ogr.OFTReal))
         layer.CreateField(ogr.FieldDefn("profundidad", ogr.OFTReal))
+        layer.CreateField(ogr.FieldDefn("borde", ogr.OFTReal))
         layer.CreateField(ogr.FieldDefn("dem", ogr.OFTReal))
     except Exception,e:
         codeError = 1
         print "ERROR al tratar de crear los campos de la tabla " + table + " :" + str(e)
 
     # Leer archivo y cargarlo en BD
+    nombretabla = table.split(".")
+    StrEsquema = nombretabla[0].lower()
+    StrTabla =nombretabla[1].lower()
     try:
+        sql = 'INSERT INTO "%s"."%s" ("distancia","profundidad","borde","dem") VALUES '%(StrEsquema, StrTabla)
         N = len(datos)
         for i in range(N):
-            # create the feature
-            #feature = ogr.Feature(layer.GetLayerDefn())
-
             # Set the attributes using the values from the data
-            dist = datos[i][0]
-            prof = datos[i][1]
-            dem = datos[i][2]
-            #feature.SetField("distancia", dist)
-            #feature.SetField("profundidad", prof)
-            #feature.SetField("dem", dem)
+            dist = str(datos[i][0])
+            prof = str(datos[i][1])
+            bord = str(datos[i][2])
+            dem  = str(datos[i][3])
+            if dist == 'None':
+                dist = "NULL"
+            if prof == 'None':
+                prof = "NULL"
+            if bord == 'None':
+                bord = "NULL"
+            if dem  == 'None':
+                dem  = "NULL"
+            sqlAux = '(%s,%s,%s,%s),'%(dist, prof, bord, dem)
+            sql = sql + sqlAux
+            # Ejecutar el sql completo
+        sql = sql[0:-1]
+        conn.ExecuteSQL(sql)
+        print '%d registros cargados exitosamente'%(N)
+    except Exception,e:
+        codeError = 1
+        print "ERROR al tratar de cargar los datos en la tabla " + table + " :" + str(e)
 
-            # Crear layer en la BD
-            #layer.CreateFeature(feature)
-            # Destroy the feature to free resources
-            #feature.Destroy()
+    return codeError
+#  Fin de la funcion CargaArchivoPerfilBySQL
 
 
-            # Probando con sql
-            nombretabla = table.split(".")
-            sql = 'INSERT INTO "%s"."%s"'%(nombretabla[0].lower(), nombretabla[1].lower())
-            sql1 = '("distancia") VALUES (%f)'%(dist)
-            if prof is not None:
-                sql1 = '("distancia","profundidad") VALUES (%f,%f)'%(dist, prof)
-                if dem is not None:
-                    sql1 = '("distancia","profundidad","dem") VALUES (%f,%f,%f)'%(dist, prof, dem)
-            else:
-                if dem is not None:
-                    sql1 = '("distancia","dem") VALUES (%f,%f)'%(dist, dem)
-
-            sql = sql + sql1
-            conn.ExecuteSQL(sql)
-
-        # Destroy the data source to free resources
-        conn.Destroy()
+def CargaTopoBasePerfilBySQL(connStr, table, perfil, datos): #TODO: dejar solo una conexion y no abrir/cerrar a cada crato
+    codeError = 0
+    # Probar la conexion
+    try:
+        conn = ogr.Open(connStr)
+    except Exception,e:
+        codeError = 1
+        print "ERROR al tratar de conectarse a la BD " + " :" + str(e)
+        return codeError
+    # Leer archivo y cargarlo en BD
+    nombretabla = table.split(".")
+    StrEsquema = nombretabla[0].lower()
+    StrTabla =nombretabla[1].lower()
+    try:
+        sql = 'INSERT INTO "%s"."%s" ("perfil","distancia","topo_base") VALUES '%(StrEsquema, StrTabla)
+        N = len(datos)
+        for i in range(N):
+            # Set the attributes using the values from the data
+            perf = str(perfil)
+            dist = str(datos[i][0])
+            topo = str(datos[i][4])
+            if dist == 'None':
+                dist = "NULL"
+            if topo == 'None':
+                topo = "NULL"
+            sqlAux = "('%s',%s,%s),"%(perf, dist, topo)
+            sql = sql + sqlAux
+        # Ejecutar el sql completo
+        sql = sql[0:-1]
+        conn.ExecuteSQL(sql)
+        print '%d registros cargados exitosamente'%(N)
     except Exception,e:
         codeError = 1
         print "ERROR al tratar de cargar los datos en la tabla " + table + " :" + str(e)
     return codeError
-#   Fin de la funcion
-
+#Fin de la funcion CargaTopoBasePerfilBySQL
 
 def DatosPerfil(filename):
-    #print 'Leyendo archivo ' + filename + ' ... '
     datos = []
     lineasprocesadas = 0
-    num_lineas = NumLinesInFile(filename)
-
     with open(filename) as infile:
         infile.seek(0)
         for line in infile:
             Line=line.split("\t")
-            # Solo procesar lineas separadas por tabulacion, con al menos 2 columnas
-            aux = len(Line)
             # Modificar en caso que sea 1 linea separada por varios espacios
             if len(Line) == 1:
                 Line = DejaUnSoloEspacio(Line[0])
                 Line = Line.split(" ")
-            aux = len(Line)
             # Procesar si hay al menos 2 columnas
             if len(Line) >= 2:
-                # Agregar primera columna (distancia)
-                x=Line[0].replace(",",".")
-                # Agregar segunda columna (profundidad)
-                y=Line[1].replace(",",".")
-                z=None
-                # Agregar tercera columna (DEM) si existe
-                if len(Line) == 3:
-                    z=Line[2].replace(",",".")
+                # Agregar columnas (distancia, batimetria, borde, dem, topo)
+                col1=Line[0].replace(",",".")
+                col2=Line[1].replace(",",".")
+                col3=Line[2].replace(",",".")
+                col4=Line[3].replace(",",".")
+                col5=Line[4].replace(",",".")
                 # En caso que tenga cabecera los datos no se agregan
-                if isNumber(x)==1:
+                if isNumber(col1)==1:
                     try:
-                        x=float(x)
+                        col1=float(col1)
                     except ValueError:
-                        x=None
+                        col1=None
                     try:
-                        y=float(y)
+                        col2=float(col2)
                     except ValueError:
-                        y=None
-                    if len(Line) == 3:
-                        try:
-                            z=float(z)
-                        except ValueError:
-                            z=None
-                    datos.append([x, y, z])
-                    lineasprocesadas = lineasprocesadas + 1
-                    #PrintProgress('lineas procesadas','',lineasprocesadas,num_lineas)
+                        col2=None
+                    try:
+                        col3=float(col3)
+                    except ValueError:
+                        col3=None
+                    try:
+                        col4=float(col4)
+                    except ValueError:
+                        col4=None
+                    try:
+                        col5=float(col5)
+                    except ValueError:
+                        col5=None
+                    datos.append([col1, col2, col3, col4, col5])
+                    lineasprocesadas += 1
     infile.close()
     return datos
-#   Fin de la funcion
+#Fin de la funcion DatosPerfil
 
 def FormatoProyecto(StrAux):
     if len(StrAux)>7:
