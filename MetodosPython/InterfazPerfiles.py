@@ -136,7 +136,7 @@ class Aplicacion(Tkinter.Frame):
         r += 1
 
         # TopFrame Row: directorio de salida
-        self.StrVarRutaOutFormat.set("")
+        self.StrVarRutaOutFormat.set(DirectorioInicial('outputmacro'))
         Tkinter.Label(TopFrame, text='Ingrese directorio de salida:').grid(row=r, column=1, sticky='WE')
         Tkinter.Entry(TopFrame, width=55, textvariable=self.StrVarRutaOutFormat).grid(row=r, column=2, sticky='WE')
         Tkinter.Label(TopFrame, text=" ").grid(row=r, column=3, sticky='WE')
@@ -301,11 +301,9 @@ class Aplicacion(Tkinter.Frame):
     #
 
     def clickCarga(self):
-        # TODO: Modificar
+        # TODO: Modificar para que funcione la barra de progreso
         logging.info("",)
         logging.info("Inciando carga de datos")
-        logging.info("estoy",)
-        logging.info(" probando")
         self.updateDescriptor('carga')
         self.progressBar.start()
         self.dbConnString = "PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" % \
@@ -316,7 +314,7 @@ class Aplicacion(Tkinter.Frame):
     #
 
     def updateDescriptor(self, tipoDescriptor):
-        # TODO: Modificar
+        # TODO: Modificar, eliminar si no es necesario
         if(tipoDescriptor=='format'):
             self.StrVarDescFormat.set('Presionaste el boton Formatear')
         if(tipoDescriptor=='carga'):
@@ -336,7 +334,8 @@ class Aplicacion(Tkinter.Frame):
     #
 
     def testConn(self):
-        logging.info("testeando conexion")
+        logging.info("testeando conexion: PG: host='%s' port='%s' dbname='%s' user='%s'" %
+                     (self.dbServer.get(), self.dbPort.get(), self.dbName.get(), self.dbUser.get()))
         self.dbConnString = "PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" % \
                             (self.dbServer.get(), self.dbPort.get(), self.dbName.get(), self.dbUser.get(), self.dbPW.get())
 
@@ -350,55 +349,56 @@ class Aplicacion(Tkinter.Frame):
         Name = self.dbName.get()
         User = self.dbUser.get()
         PW = self.dbPW.get()
-        # TODO: De momento no hace nada, despues hay que guardarlo en el config.json
+        # TODO: De momento no hace nada, despues hay que guardarlo en un archivo config.json o similar
         #par.GlobalValues['connString'] = "PG: host='%s' port='%s' dbname='%s' user='%s' password='%s'" %(Server,Port,Name,User,PW)
     # Fin funcion self.SaveConn()
     #
 # Fin de la clase
-
-
-
+#
+#
 
 
 # -----------------------------------------------------
 # Clase Std_redirector
 # -----------------------------------------------------
+
 class Std_redirector(object):
-    def __init__(self,widget):
+    def __init__(self, widget):
         self.widget = widget
-    #Fin del __init__
+    # Fin del __init__
 
     def write(self,string):
-        self.widget.insert('end',string)
+        self.widget.insert('end', string)
         self.widget.see('end')
         self.widget.update()
-    #Fin de la funcion
-#Fin de la clase
-
+    # Fin de la funcion
+# Fin de la clase
+#
+#
 
 
 # -----------------------------------------------------
 # Funciones
 # -----------------------------------------------------
 
-
 def testConnString(connStr, esTest=1):
     ogr.UseExceptions()
-    texto =""
     esError = 0
     try:
         conn = ogr.Open(connStr)
         texto = "Conexion exitosa"
+        logging.info("Conexion exitosa")
         conn.Destroy()
     except Exception, e:
-        texto= "Error de conexion"
+        texto = "Error de conexion"
+        logging.info("Error de conexion")
         esError = 1
     if esTest == 1:
         EdoConexion(texto)
     if esTest == 0 and esError == 1:
         EdoConexion(texto)
     return esError
-#Fin de la funcion
+# Fin de la funcion
 
 
 def EdoConexion(estado):
@@ -408,20 +408,18 @@ def EdoConexion(estado):
     whiteL = Tkinter.Label(w3, text="  ")
     whiteL.pack()
 
-    Tkinter.Label(w3, width=20,text=estado).pack()
-    Tkinter.Button(w3, text='Aceptar',command=w3.destroy).pack()
+    Tkinter.Label(w3, width=20, text=estado).pack()
+    Tkinter.Button(w3, text='Aceptar', command=w3.destroy).pack()
 
     w3.geometry('150x100')
     w3.iconbitmap('.\logo\logo_hgi.ico')
 # Fin de la funcion
-#
 
 
 def rutaDir(StrVarRuta):
     rutadeldirectorio=askdirectory()
     StrVarRuta.set(rutadeldirectorio)
 # Fin funcion
-#
 
 
 def subeArchivos(CheckVar, StrVarRuta, logwin, connStr):
@@ -455,8 +453,8 @@ def subeArchivos(CheckVar, StrVarRuta, logwin, connStr):
                 new_thread.daemon = True
                 new_thread.start()
                 time_fin = dt.datetime.now()
-                print "Carga de archivos finalizada: " + time_fin.strftime("%d-%m-%Y %H:%M:%S")
-                print "Tiempo de ejecucion: " + str(time_fin-time_ini)
+                logging.info("Carga de archivos finalizada")
+                logging.info("Tiempo de ejecucion: " + str(time_fin-time_ini))
             except Exception,e:
                 print "Error de ejecucion:\n" + str(e)
         #sys.stdout = stdout_old
@@ -477,6 +475,8 @@ def Test(window):
 def DirectorioInicial(tipoDir):
     if(tipoDir =='formato'):
         return 'C:\Users\Arnol\GitHub\ETLTailings\MacroVB\data_proyectos'
+    if(tipoDir =='outputmacro'):
+        return 'C:\Users\Arnol\GitHub\ETLTailings\MacroVB\data_formateada'
     if(tipoDir =='carga'):
         return 'C:\Users\Arnol\GitHub\ETLTailings\MacroVB\data_formateada'
 # Fin de la funcion DirectorioInicial()

@@ -6,10 +6,11 @@
 """
 
 import os, sys
-from osgeo import ogr,osr
+from osgeo import ogr, osr
 
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def LoadPerfilMulti(path,connStr,reprocesa):
     proyectos = next(os.walk(path))[1]
@@ -21,7 +22,7 @@ def LoadPerfilMulti(path,connStr,reprocesa):
             try:
                 LoadTopoBase(newpath,connStr)
             except Exception,e:
-                print "ERROR al procesar la TOPO BASE : %s "%(str(e))
+                print "ERROR al procesar la TOPO BASE : %s " % (str(e))
         else:
             proy=FormatoProyecto(proyectos[i])
             print "\nCargando proyecto %s (%s/%s)" %(proy,i+1,len(proyectos))
@@ -30,8 +31,8 @@ def LoadPerfilMulti(path,connStr,reprocesa):
             try:
                 LoadPerfilSingle(newpath,proy,connStr,reprocesa)
             except Exception,e:
-                print "ERROR al procesar el proyecto %s : %s "%(str(proyectos[i]),str(e))
-    print "\nEjecucion finalizada."
+                print "ERROR al procesar el proyecto %s : %s " % (str(proyectos[i]),str(e))
+    logging.info("Ejecucion finalizada.")
 #   Fin de la funcion
 
 
@@ -40,7 +41,7 @@ def LoadPerfilSingle(path,proyecto,connStr,reprocesa):
     fechap =  "'"+proyecto[6:]+"-"+proyecto[3:5]+"-"+proyecto[0:2]+"'"
     estado = "'"+str(reprocesa)+"'"
     conn = ogr.Open(connStr)
-    sql1 = 'select  perfiles_procesados.crea_proyecto(%s)' %(fechap)
+    sql1 = 'select  perfiles_procesados.crea_proyecto(%s)' % (fechap)
     try:
         numPresults = conn.ExecuteSQL(sql1)
     except Exception,e:
