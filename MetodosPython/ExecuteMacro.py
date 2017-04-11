@@ -7,23 +7,26 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-import win32com.client
-
+#import win32com.client
+import xlwings as xw
 
 def executeMacroPerfil(macroDir, directorioIn, directorioOut):
     logging.info('Parametros executeMacroPerfil: (%s, %s, %s)', macroDir, directorioIn, directorioOut)
 
     # Iniciar Excel
-    xl = win32com.client.DispatchEx("Excel.Application")
+    #xl = win32com.client.DispatchEx("Excel.Application")
 
     # Abrir libro con la macro
     nameWb = "EjecutarMacroPerfiles.xls"
     pathToWb = macroDir + "/" + nameWb
-    wb = xl.workbooks.open(pathToWb)
+    #wb = xl.workbooks.open(pathToWb)
+    wb = xw.Book(pathToWb)
 
     # Ejecutar Macro 'BorrarLog'
     try:
-        xl.run("BorrarLog")
+        #xl.run("BorrarLog")
+        Macro_BorraLog = wb.macro('BorrarLog')
+        Macro_BorraLog()
         logging.info('Macro BorrarLog ejecutada correctamente')
     except Exception, e:
         strInfo = 'Error al ejecutar la Macro BorrarLog'
@@ -32,7 +35,9 @@ def executeMacroPerfil(macroDir, directorioIn, directorioOut):
 
     # Ejecutar Macro 'FunctionConsolidaProyectos'
     try:
-        nroErrores = xl.run("FunctionConsolidaProyectos", directorioIn, directorioOut)
+        #nroErrores = xl.run("FunctionConsolidaProyectos", directorioIn, directorioOut)
+        Macro_Consolida = wb.macro("FunctionConsolidaProyectos")
+        nroErrores = Macro_Consolida(directorioIn, directorioOut)
         logging.debug(nroErrores)
         if nroErrores > 0:
             strInfo = 'Macro ConsolidaProyectos ejecutada con errores. por favor revisa el log'
