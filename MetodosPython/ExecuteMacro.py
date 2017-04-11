@@ -5,6 +5,7 @@
 """
 
 import logging
+from sys import platform
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 #import win32com.client
@@ -25,7 +26,10 @@ def executeMacroPerfil(macroDir, directorioIn, directorioOut):
     # Ejecutar Macro 'BorrarLog'
     try:
         #xl.run("BorrarLog")
-        Macro_BorraLog = wb.macro('BorrarLog')
+        if platform == 'win32':
+            Macro_BorraLog = wb.macro('BorrarLog')
+        elif platform == 'darwin':
+            Macro_BorraLog = wb.macro('Module1.BorrarLog')
         Macro_BorraLog()
         logging.info('Macro BorrarLog ejecutada correctamente')
     except Exception, e:
