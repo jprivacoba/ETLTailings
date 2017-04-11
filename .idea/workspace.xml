@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5268626b-f5ac-4ab8-8eb8-8b94767f769f" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MetodosPython/test_RunMacroFromPython.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MacroVB/EjecutarMacroPerfiles.xls" afterPath="$PROJECT_DIR$/MacroVB/EjecutarMacroPerfiles.xls" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MetodosPython/ExecuteMacro.py" afterPath="$PROJECT_DIR$/MetodosPython/ExecuteMacro.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MetodosPython/LoggingFrame.py" afterPath="$PROJECT_DIR$/MetodosPython/LoggingFrame.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ETLTailings.iws" />
@@ -37,12 +39,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="InterfazPerfiles.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="InterfazPerfiles.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.64141417">
+            <state vertical-scroll-proportion="0.0">
               <caret line="294" column="28" selection-start-line="294" selection-start-column="28" selection-end-line="294" selection-end-column="28" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LoggingFrame.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/MetodosPython/LoggingFrame.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.7846154">
+              <caret line="27" column="84" selection-start-line="27" selection-start-column="84" selection-end-line="27" selection-end-column="84" />
+              <folding>
+                <element signature="e#42#56#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -51,7 +65,7 @@
         <entry file="file://$PROJECT_DIR$/MetodosPython/ExecuteMacro.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="39" column="21" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
+              <caret line="53" column="24" selection-start-line="53" selection-start-column="24" selection-end-line="53" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -86,11 +100,11 @@
         <option value="$PROJECT_DIR$/MacroVB/test_RunMacroFromPython.py" />
         <option value="$PROJECT_DIR$/MetodosPython/MetodosGenerales.py" />
         <option value="$PROJECT_DIR$/MetodosPython/testing file_v2.py" />
-        <option value="$PROJECT_DIR$/MetodosPython/LoggingFrame.py" />
         <option value="$PROJECT_DIR$/MetodosPython/test_RunMacroFromPython.py" />
         <option value="$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py" />
         <option value="$PROJECT_DIR$/MetodosPython/metodosPerfiles.py" />
         <option value="$PROJECT_DIR$/MetodosPython/ExecuteMacro.py" />
+        <option value="$PROJECT_DIR$/MetodosPython/LoggingFrame.py" />
       </list>
     </option>
   </component>
@@ -645,7 +659,13 @@
       <option name="project" value="LOCAL" />
       <updated>1491930526616</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Versionamiento de archivos">
+      <created>1491932542504</created>
+      <option name="number" value="00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1491932542504</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -661,17 +681,17 @@
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31685677" sideWeight="0.7240566" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31685677" sideWeight="0.71875" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32814237" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32684284" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32694355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41029206" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5994437" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3265306" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31685677" sideWeight="0.2759434" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31685677" sideWeight="0.28125" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31813127" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1089,6 +1109,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Python27/Lib/site-packages/xlwings/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.2258772">
+          <caret line="602" column="8" selection-start-line="602" selection-start-column="8" selection-end-line="602" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/MetodosPython/metodosPerfiles.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1099,37 +1127,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/site-packages/xlwings/main.py">
+    <entry file="file://$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.2258772">
-          <caret line="602" column="8" selection-start-line="602" selection-start-column="8" selection-end-line="602" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="294" column="28" selection-start-line="294" selection-start-column="28" selection-end-line="294" selection-end-column="28" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MetodosPython/LoggingFrame.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0438596">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding>
-            <element signature="e#42#56#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MetodosPython/ExecuteMacro.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="21" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
+          <caret line="53" column="24" selection-start-line="53" selection-start-column="24" selection-end-line="53" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MetodosPython/InterfazPerfiles.py">
+    <entry file="file://$PROJECT_DIR$/MetodosPython/LoggingFrame.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.64141417">
-          <caret line="294" column="28" selection-start-line="294" selection-start-column="28" selection-end-line="294" selection-end-column="28" />
-          <folding />
+        <state vertical-scroll-proportion="0.7846154">
+          <caret line="27" column="84" selection-start-line="27" selection-start-column="84" selection-end-line="27" selection-end-column="84" />
+          <folding>
+            <element signature="e#42#56#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

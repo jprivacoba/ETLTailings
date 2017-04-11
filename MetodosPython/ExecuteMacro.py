@@ -51,7 +51,7 @@ def executeMacroPerfil(macroDir, directorioIn, directorioOut):
         return strInfo
 
     # Mostrar el libro y retornar salida
-    xl.Visible = True
+    #xl.Visible = True  # Esto causa error al usar xlwings
     return strInfo
 # Fin de la funcion
 #
