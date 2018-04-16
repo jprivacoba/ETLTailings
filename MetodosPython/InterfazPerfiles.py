@@ -291,7 +291,9 @@ class Aplicacion(Tkinter.Frame):
         #self.notebook.select(2)
 
         # Ejecutar macro
-        mDir = "C:\\Users\\Arnol\\GitHub\\ETLTailings\\MacroVB"
+        mDir = "C:\\Users\\Casandra\\PycharmProjects\\ETLTailings\\" \
+               "" \
+               "MacroVB"
         strFormateo = macro.executeMacroPerfil(mDir, rutaIn, rutaOut)
         self.StrVarDescFormat.set(strFormateo)
 
